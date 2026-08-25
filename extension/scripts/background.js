@@ -46,10 +46,17 @@ async function startSession(serviceId, apiKey) {
   const allWorkflows = await loadWorkflows();
   const service = allWorkflows[serviceId] || Object.values(allWorkflows)[0];
 
+  // Try to load key from chrome storage if not passed
+  let keyToUse = apiKey;
+  if (!keyToUse) {
+    const data = await chrome.storage.local.get(['civora_api_key']);
+    keyToUse = data.civora_api_key;
+  }
+
   activeSession = {
     serviceId,
     service,
-    apiKey,
+    apiKey: keyToUse,
     step: 0,
     startTime: Date.now()
   };

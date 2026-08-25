@@ -7,7 +7,7 @@
 export class VisionEngine {
   constructor() {
     this.apiKey = null;
-    this.model = 'gemini-3.6-flash';
+    this.model = 'gemini-2.5-flash';
     this.apiBase = 'https://generativelanguage.googleapis.com/v1beta';
     this.isProcessing = false;
     this.lastAnalysis = null;
@@ -24,7 +24,7 @@ export class VisionEngine {
    * Check if API key is configured
    */
   isConfigured() {
-    return !!this.apiKey && this.apiKey.trim().length > 0;
+    return !!(this.apiKey && this.apiKey.trim().length > 0);
   }
 
   /**

@@ -1,0 +1,10 @@
+# Environment & Local Configuration (Protected Secrets)
+config.js
+extension/config.js
+.env
+.env.local
+
+# Logs & temp
+*.log
+node_modules/
+.DS_Store

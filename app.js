@@ -39,8 +39,23 @@ class CivoraApp {
   }
 
   async init() {
-    // Load saved API key
-    const savedKey = localStorage.getItem('civora_api_key');
+    // Attempt to load from local config.js first
+    let defaultKey = '';
+    try {
+      const { CONFIG } = await import('./config.js');
+      if (CONFIG?.GEMINI_API_KEY) {
+        defaultKey = CONFIG.GEMINI_API_KEY;
+      }
+    } catch (e) {
+      // config.js not found or running in production
+    }
+
+    // Load saved API key or use system default from config
+    let savedKey = localStorage.getItem('civora_api_key');
+    if (!savedKey && defaultKey) {
+      savedKey = defaultKey;
+      localStorage.setItem('civora_api_key', savedKey);
+    }
     if (savedKey) {
       this.visionEngine.setApiKey(savedKey);
     }
@@ -84,12 +99,7 @@ class CivoraApp {
   bindEvents() {
     // Landing
     document.getElementById('btnGetStarted').addEventListener('click', () => {
-      if (!this.visionEngine.isConfigured()) {
-        this.openSettings();
-        this.showToast('Please set your Gemini API key first.', 'info');
-      } else {
-        this.showView('modes');
-      }
+      this.showView('modes');
     });
 
     document.getElementById('btnLearnMore').addEventListener('click', () => {

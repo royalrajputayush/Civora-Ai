@@ -15,10 +15,22 @@ document.addEventListener('DOMContentLoaded', async () => {
   const btnSaveSettings = document.getElementById('btnSaveSettings');
   const btnBackToMain = document.getElementById('btnBackToMain');
 
+  // Try to load key from local config.js if present
+  let defaultKey = '';
+  try {
+    const { EXTENSION_CONFIG } = await import('../config.js');
+    if (EXTENSION_CONFIG?.GEMINI_API_KEY) {
+      defaultKey = EXTENSION_CONFIG.GEMINI_API_KEY;
+    }
+  } catch (e) {}
+
   // Load saved API key
   const data = await chrome.storage.local.get(['civora_api_key']);
   if (data.civora_api_key) {
     apiKeyInput.value = data.civora_api_key;
+  } else if (defaultKey) {
+    apiKeyInput.value = defaultKey;
+    await chrome.storage.local.set({ civora_api_key: defaultKey });
   }
 
   // Service Selection
