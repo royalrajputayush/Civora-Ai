@@ -1,31 +1,262 @@
 /**
  * Civora AI — Process Knowledge Module
- * Manages structured workflow definitions and matches screen state to process steps.
- * Supports sub-workflows: a parent workflow can have commonSteps + subWorkflows,
- * and the user picks a sub-workflow to merge into a single active step list.
+ * Manages structured workflow definitions for Indian government citizen portals.
+ * Fully synchronous with built-in verified workflows for instant, offline-capable execution.
  */
+
+const BUILTIN_AADHAAR_WORKFLOW = {
+  "id": "aadhaar-services",
+  "name": "Aadhaar Online Services",
+  "description": "Navigate myAadhaar portal for address updates, downloads, appointments, and status checks.",
+  "service_url": "https://myaadhaar.uidai.gov.in",
+  "commonSteps": [
+    {
+      "id": "landing",
+      "name": "myAadhaar Portal Dashboard",
+      "description": "The resident service portal home screen",
+      "expectedElements": ["Login", "Download Aadhaar", "Update Address", "Check Status", "Book Appointment"],
+      "nextAction": "Click on the service you want to start",
+      "targetElement": "Service Card",
+      "tips": "Look for the prominent card on the portal home page."
+    }
+  ],
+  "subWorkflows": [
+    {
+      "id": "update-address",
+      "name": "Update Address",
+      "icon": "📍",
+      "description": "Update residential address with valid proof",
+      "estimatedTime": "~5-10 min",
+      "requiredDocuments": ["Passport", "Electricity Bill", "Bank Passbook", "Rent Agreement"],
+      "steps": [
+        {
+          "id": "landing",
+          "name": "1. Portal Dashboard",
+          "description": "Select the Address Update service from the main portal dashboard",
+          "nextAction": "Click on 'Update Address' card",
+          "targetElement": "Update Address",
+          "actionType": "tap",
+          "tips": "This opens the Self Service Update Portal (SSUP)."
+        },
+        {
+          "id": "address-form",
+          "name": "2. Fill New Address",
+          "description": "Enter your new residential address details carefully",
+          "nextAction": "Fill in your House No, Street, and PIN Code, then click Next",
+          "targetElement": "Next Button",
+          "actionType": "type",
+          "tips": "Enter the address exactly as written on your supporting document."
+        },
+        {
+          "id": "upload-proof",
+          "name": "3. Upload Proof Document",
+          "description": "Upload a valid scan or photo of your address proof",
+          "nextAction": "Select document type and upload your file (under 2MB)",
+          "targetElement": "Upload Document",
+          "actionType": "upload",
+          "tips": "Accepted: Electricity Bill (≤3 months old), Passport, or Bank Passbook."
+        },
+        {
+          "id": "review-address",
+          "name": "4. Review Details",
+          "description": "Review your updated address before submitting",
+          "nextAction": "Check the preview and click 'Submit Update Request'",
+          "targetElement": "Submit Button",
+          "actionType": "tap",
+          "tips": "Double check PIN code and building number."
+        },
+        {
+          "id": "confirmation",
+          "name": "5. Save Request Number (SRN)",
+          "description": "Registration successful with tracking number",
+          "nextAction": "Save or screenshot your Service Request Number (SRN)",
+          "targetElement": "SRN Number",
+          "actionType": "tap",
+          "tips": "You will need this SRN to track update progress."
+        }
+      ]
+    },
+    {
+      "id": "download-aadhaar",
+      "name": "Download e-Aadhaar",
+      "icon": "📥",
+      "description": "Download electronic copy of Aadhaar card PDF",
+      "estimatedTime": "~3 min",
+      "requiredDocuments": ["Aadhaar Number & Registered Mobile"],
+      "steps": [
+        {
+          "id": "landing",
+          "name": "1. Portal Dashboard",
+          "description": "Select Download Aadhaar on myAadhaar homepage",
+          "nextAction": "Click on 'Download Aadhaar' card",
+          "targetElement": "Download Aadhaar",
+          "actionType": "tap",
+          "tips": "You will need your 12-digit Aadhaar number."
+        },
+        {
+          "id": "download-otp",
+          "name": "2. Verify Mobile OTP",
+          "description": "Enter OTP sent to your registered mobile number",
+          "nextAction": "Type the 6-digit OTP received via SMS and tap Verify",
+          "targetElement": "Verify OTP",
+          "actionType": "type",
+          "securityBoundary": true,
+          "tips": "🔒 Civora will never ask for your OTP. Enter it directly on UIDAI."
+        },
+        {
+          "id": "download-file",
+          "name": "3. Download & Open PDF",
+          "description": "Save the password-protected digital Aadhaar PDF",
+          "nextAction": "Click 'Download e-Aadhaar PDF'",
+          "targetElement": "Download PDF",
+          "actionType": "tap",
+          "tips": "PDF Password = First 4 letters of name in CAPITAL + Birth Year (e.g. ANIS1995)."
+        }
+      ]
+    },
+    {
+      "id": "update-mobile",
+      "name": "Update Mobile Number",
+      "icon": "📱",
+      "description": "Book appointment to link new phone number",
+      "estimatedTime": "~5 min (online part)",
+      "requiredDocuments": ["Original Aadhaar Card & New Mobile Phone"],
+      "steps": [
+        {
+          "id": "landing",
+          "name": "1. Portal Dashboard",
+          "description": "Navigate to Seva Kendra Appointment booking",
+          "nextAction": "Click on 'Book Appointment' card",
+          "targetElement": "Book Appointment",
+          "actionType": "tap",
+          "tips": "Mobile updates require physical biometric verification at a centre."
+        },
+        {
+          "id": "select-centre",
+          "name": "2. Select Centre & Time Slot",
+          "description": "Pick your nearest Aadhaar Seva Kendra and date",
+          "nextAction": "Select your city, date, and preferred time slot, then click Book",
+          "targetElement": "Confirm Appointment",
+          "actionType": "select",
+          "tips": "Booking in advance avoids standing in long queues."
+        },
+        {
+          "id": "confirmation",
+          "name": "3. Save Booking Receipt",
+          "description": "Save your appointment slip",
+          "nextAction": "Save your Appointment Slip and visit centre with new phone",
+          "targetElement": "Download Receipt",
+          "actionType": "tap",
+          "tips": "Carry your original Aadhaar card and new mobile phone for OTP."
+        }
+      ]
+    },
+    {
+      "id": "update-name",
+      "name": "Update Name",
+      "icon": "✏️",
+      "description": "Correct spelling or update name on Aadhaar",
+      "estimatedTime": "~5-10 min",
+      "requiredDocuments": ["Passport", "PAN Card", "Voter ID", "Marriage Certificate"],
+      "steps": [
+        {
+          "id": "landing",
+          "name": "1. Portal Dashboard",
+          "description": "Navigate to demographic update section",
+          "nextAction": "Click on 'Update Name / Demographics'",
+          "targetElement": "Update Name",
+          "actionType": "tap",
+          "tips": "Name corrections require a valid government photo ID."
+        },
+        {
+          "id": "name-form",
+          "name": "2. Enter Correct Name",
+          "description": "Enter the corrected name exactly as on identity proof",
+          "nextAction": "Enter your full name and click Next",
+          "targetElement": "Next Button",
+          "actionType": "type",
+          "tips": "Avoid abbreviations unless they are present on your proof document."
+        },
+        {
+          "id": "upload-proof",
+          "name": "3. Upload Identity Proof",
+          "description": "Upload PAN card, Passport, or Voter ID",
+          "nextAction": "Upload your proof document and submit",
+          "targetElement": "Upload File",
+          "actionType": "upload",
+          "tips": "Ensure the document is clear and readable."
+        },
+        {
+          "id": "confirmation",
+          "name": "4. Save URN Tracking Number",
+          "description": "Name update request registered",
+          "nextAction": "Save your Update Request Number (URN)",
+          "targetElement": "URN Number",
+          "actionType": "tap",
+          "tips": "Name updates typically process within 5-10 working days."
+        }
+      ]
+    },
+    {
+      "id": "check-status",
+      "name": "Track Request Status",
+      "icon": "🔍",
+      "description": "Check real-time progress of your Aadhaar update",
+      "estimatedTime": "~2 min",
+      "requiredDocuments": ["Service Request Number (SRN or URN)"],
+      "steps": [
+        {
+          "id": "landing",
+          "name": "1. Portal Dashboard",
+          "description": "Select Check Status on the portal",
+          "nextAction": "Click on 'Check Status' card",
+          "targetElement": "Check Status",
+          "actionType": "tap",
+          "tips": "Have your 14 or 28-digit SRN/URN handy."
+        },
+        {
+          "id": "status-tracker",
+          "name": "2. Enter Tracking Number",
+          "description": "Enter your SRN and solve CAPTCHA",
+          "nextAction": "Type your SRN and click 'Submit'",
+          "targetElement": "Submit Button",
+          "actionType": "type",
+          "tips": "The tracking number is in your SMS receipt."
+        },
+        {
+          "id": "status-result",
+          "name": "3. View Current Stage",
+          "description": "See verification stage and completion status",
+          "nextAction": "Check if status is 'Completed' or 'Under Verification'",
+          "targetElement": "Status Result",
+          "actionType": "tap",
+          "tips": "If status says Completed, your e-Aadhaar is ready for download."
+        }
+      ]
+    }
+  ]
+};
 
 export class ProcessKnowledge {
   constructor() {
     this.workflows = new Map();
     this.activeWorkflow = null;
     this.activeSubWorkflow = null;
-    this.currentStepIndex = -1;
+    this.currentStepIndex = 0;
     this.completedSteps = [];
+
+    // Pre-load verified built-in workflows synchronously
+    this.loadWorkflow(BUILTIN_AADHAAR_WORKFLOW);
+    this.setActiveSubWorkflow('update-address');
   }
 
-  /**
-   * Load a workflow from a JSON object
-   * @param {object} workflowData - The workflow JSON data
-   */
   loadWorkflow(workflowData) {
+    if (!workflowData || !workflowData.id) return;
     this.workflows.set(workflowData.id, workflowData);
   }
 
-  /**
-   * Load the built-in workflows
-   */
   async loadBuiltinWorkflows() {
+    // Already loaded in constructor, optionally fetch latest updates
     try {
       const response = await fetch('./data/workflows/aadhaar-services.json');
       if (response.ok) {
@@ -33,91 +264,57 @@ export class ProcessKnowledge {
         this.loadWorkflow(data);
       }
     } catch (err) {
-      console.warn('Failed to load built-in workflows:', err);
+      // Fallback is already loaded
     }
   }
 
-  /**
-   * Get all loaded workflows
-   */
   getWorkflows() {
     return Array.from(this.workflows.values());
   }
 
-  /**
-   * Check if a workflow has sub-workflows
-   * @param {string} workflowId
-   * @returns {boolean}
-   */
-  hasSubWorkflows(workflowId) {
-    const workflow = this.workflows.get(workflowId);
-    return !!(workflow && workflow.subWorkflows && workflow.subWorkflows.length > 0);
+  hasSubWorkflows(workflowId = 'aadhaar-services') {
+    const wf = this.workflows.get(workflowId);
+    return !!(wf && wf.subWorkflows && wf.subWorkflows.length > 0);
   }
 
-  /**
-   * Get the sub-workflows for a given workflow
-   * @param {string} workflowId
-   * @returns {Array} list of sub-workflow summaries
-   */
-  getSubWorkflows(workflowId) {
-    const workflow = this.workflows.get(workflowId);
-    if (!workflow || !workflow.subWorkflows) return [];
-    return workflow.subWorkflows.map(sw => ({
-      id: sw.id,
-      name: sw.name,
-      icon: sw.icon || '📋',
-      description: sw.description || '',
-      requiredDocuments: sw.requiredDocuments || [],
-      estimatedTime: sw.estimatedTime || ''
-    }));
+  getSubWorkflows(workflowId = 'aadhaar-services') {
+    const wf = this.workflows.get(workflowId);
+    if (!wf || !wf.subWorkflows) return [];
+    return wf.subWorkflows;
   }
 
-  /**
-   * Set the active workflow. If it has sub-workflows and no subWorkflowId
-   * is given, it just sets the parent — caller should then show sub-workflow picker.
-   * @param {string} workflowId
-   * @param {string} [subWorkflowId] - Optional sub-workflow to activate
-   */
-  setActiveWorkflow(workflowId, subWorkflowId) {
-    const workflow = this.workflows.get(workflowId);
+  setActiveSubWorkflow(subWorkflowId = 'update-address') {
+    return this.setActiveWorkflow('aadhaar-services', subWorkflowId);
+  }
+
+  setActiveWorkflow(workflowId = 'aadhaar-services', subWorkflowId = 'update-address') {
+    let workflow = this.workflows.get(workflowId);
     if (!workflow) {
-      throw new Error(`Workflow not found: ${workflowId}`);
+      workflow = BUILTIN_AADHAAR_WORKFLOW;
+      this.loadWorkflow(workflow);
     }
 
-    this.activeSubWorkflow = null;
+    let sub = null;
+    if (workflow.subWorkflows) {
+      sub = workflow.subWorkflows.find(s => s.id === subWorkflowId) || workflow.subWorkflows[0];
+    }
 
-    // If the workflow has sub-workflows and a specific one is selected,
-    // merge commonSteps + subWorkflow.steps into a flat step list
-    if (workflow.subWorkflows && subWorkflowId) {
-      const sub = workflow.subWorkflows.find(sw => sw.id === subWorkflowId);
-      if (!sub) {
-        throw new Error(`Sub-workflow not found: ${subWorkflowId}`);
-      }
+    this.activeSubWorkflow = sub;
 
-      this.activeSubWorkflow = sub;
-
-      // Build merged workflow
-      const mergedSteps = [
-        ...(workflow.commonSteps || []),
-        ...sub.steps
-      ];
-
+    if (sub && sub.steps) {
       this.activeWorkflow = {
-        ...workflow,
-        name: `${workflow.name} — ${sub.name}`,
-        steps: mergedSteps,
+        id: `${workflow.id}:${sub.id}`,
+        name: sub.name,
+        description: sub.description,
+        estimatedTime: sub.estimatedTime,
+        steps: sub.steps,
         _subWorkflowId: sub.id,
-        _originalId: workflow.id
+        _parentId: workflow.id
       };
-    } else if (workflow.steps) {
-      // Legacy: workflow has flat steps array
-      this.activeWorkflow = workflow;
     } else {
-      // Workflow only has sub-workflows — set parent but no active steps yet
       this.activeWorkflow = {
         ...workflow,
-        steps: workflow.commonSteps || [],
-        _needsSubSelection: true
+        steps: workflow.steps || []
       };
     }
 
@@ -126,71 +323,45 @@ export class ProcessKnowledge {
     return this.activeWorkflow;
   }
 
-  /**
-   * Check if we need sub-workflow selection before guidance can start
-   */
-  needsSubWorkflowSelection() {
-    return !!(this.activeWorkflow && this.activeWorkflow._needsSubSelection);
-  }
-
-  /**
-   * Get the active workflow
-   */
   getActiveWorkflow() {
     return this.activeWorkflow;
   }
 
-  /**
-   * Get the active sub-workflow (if any)
-   */
   getActiveSubWorkflow() {
     return this.activeSubWorkflow;
   }
 
-  /**
-   * Get the current step
-   */
-  getCurrentStep() {
-    if (!this.activeWorkflow || this.currentStepIndex < 0) return null;
-    return this.activeWorkflow.steps[this.currentStepIndex] || null;
+  getSteps() {
+    return this.activeWorkflow?.steps || [];
   }
 
-  /**
-   * Get workflow context for the Vision Engine
-   */
-  getWorkflowContext() {
-    if (!this.activeWorkflow) {
-      return {
-        serviceName: 'Unknown Service',
-        steps: [],
-        currentStep: null,
-        expectedElements: []
-      };
+  getCurrentStep() {
+    const steps = this.getSteps();
+    if (this.currentStepIndex < 0 || this.currentStepIndex >= steps.length) {
+      return steps[0] || null;
     }
+    return steps[this.currentStepIndex] || null;
+  }
 
+  getWorkflowContext() {
     const currentStep = this.getCurrentStep();
+    const steps = this.getSteps();
     return {
-      serviceName: this.activeWorkflow.name,
+      serviceName: this.activeWorkflow?.name || 'Aadhaar Service',
       subWorkflowName: this.activeSubWorkflow?.name || null,
-      steps: this.activeWorkflow.steps,
+      steps,
       currentStep,
       expectedElements: currentStep?.expectedElements || [],
       currentStepIndex: this.currentStepIndex,
-      totalSteps: this.activeWorkflow.steps.length
+      totalSteps: steps.length
     };
   }
 
-  /**
-   * Try to match the AI analysis to a workflow step
-   * @param {object} analysis - The analysis result from VisionEngine
-   * @returns {object|null} Matched step info
-   */
   matchStep(analysis) {
     if (!this.activeWorkflow) return null;
+    const steps = this.getSteps();
+    if (!steps.length) return null;
 
-    const steps = this.activeWorkflow.steps;
-    
-    // Try to match based on detected elements and screen title
     let bestMatch = null;
     let bestScore = 0;
 
@@ -198,34 +369,23 @@ export class ProcessKnowledge {
       const step = steps[i];
       let score = 0;
 
-      // Check if detected elements match expected elements
       if (analysis.detectedElements && step.expectedElements) {
         for (const detected of analysis.detectedElements) {
           for (const expected of step.expectedElements) {
-            if (detected.toLowerCase().includes(expected.toLowerCase()) ||
-                expected.toLowerCase().includes(detected.toLowerCase())) {
+            if (detected.toLowerCase().includes(expected.toLowerCase())) {
               score += 2;
             }
           }
         }
       }
 
-      // Check if screen title matches step name/description
-      if (analysis.screenTitle) {
-        const title = analysis.screenTitle.toLowerCase();
-        if (title.includes(step.name.toLowerCase()) || 
-            step.name.toLowerCase().includes(title)) {
+      if (analysis.screenTitle && step.name) {
+        if (analysis.screenTitle.toLowerCase().includes(step.name.toLowerCase())) {
           score += 3;
-        }
-        if (step.description && title.includes(step.description.toLowerCase())) {
-          score += 2;
         }
       }
 
-      // Slight preference for sequential steps
-      if (i === this.currentStepIndex || i === this.currentStepIndex + 1) {
-        score += 1;
-      }
+      if (i === this.currentStepIndex) score += 1;
 
       if (score > bestScore) {
         bestScore = score;
@@ -241,56 +401,30 @@ export class ProcessKnowledge {
     return null;
   }
 
-  /**
-   * Mark the current step as completed and advance
-   */
   advanceStep() {
-    if (!this.activeWorkflow) return null;
-
-    const currentStep = this.getCurrentStep();
-    if (currentStep) {
-      this.completedSteps.push({
-        step: currentStep,
-        completedAt: Date.now()
-      });
+    const steps = this.getSteps();
+    if (this.currentStepIndex < steps.length - 1) {
+      this.currentStepIndex++;
+      return { completed: false, step: this.getCurrentStep() };
     }
-
-    this.currentStepIndex++;
-    
-    if (this.currentStepIndex >= this.activeWorkflow.steps.length) {
-      return { completed: true, step: null };
-    }
-
-    return { completed: false, step: this.getCurrentStep() };
+    return { completed: true, step: null };
   }
 
-  /**
-   * Get progress information
-   */
   getProgress() {
-    if (!this.activeWorkflow) {
-      return { current: 0, total: 0, percentage: 0, completedSteps: [] };
-    }
-
-    const total = this.activeWorkflow.steps.length;
+    const steps = this.getSteps();
+    const total = steps.length || 1;
     const current = Math.min(this.currentStepIndex + 1, total);
-    
     return {
       current,
       total,
       percentage: Math.round((current / total) * 100),
-      completedSteps: this.completedSteps,
-      isComplete: this.currentStepIndex >= total
+      isComplete: this.currentStepIndex >= total - 1
     };
   }
 
-  /**
-   * Get all steps with their status
-   */
   getStepsWithStatus() {
-    if (!this.activeWorkflow) return [];
-
-    return this.activeWorkflow.steps.map((step, index) => ({
+    const steps = this.getSteps();
+    return steps.map((step, index) => ({
       ...step,
       status: index < this.currentStepIndex ? 'completed' :
               index === this.currentStepIndex ? 'current' : 'upcoming',
@@ -298,9 +432,6 @@ export class ProcessKnowledge {
     }));
   }
 
-  /**
-   * Reset the current workflow progress
-   */
   resetProgress() {
     this.currentStepIndex = 0;
     this.completedSteps = [];

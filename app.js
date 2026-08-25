@@ -37,6 +37,9 @@ class CivoraApp {
     this.popupReady = false;
     this.popupPingInterval = null;
 
+    // Expose global reference
+    window.civora = this;
+
     // Initialize
     this.init();
   }
