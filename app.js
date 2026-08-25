@@ -135,6 +135,34 @@ class CivoraApp {
       this.selectMode('screenshot');
     });
 
+    // AI Prompt / Search Bar Handler
+    const launchFromSearch = () => {
+      const searchInput = document.getElementById('aiServiceSearchInput');
+      const query = (searchInput?.value || '').trim().toLowerCase();
+      let matchedWf = 'update-address'; // default
+
+      if (query.includes('download') || query.includes('pdf') || query.includes('copy') || query.includes('get aadhaar')) {
+        matchedWf = 'download-aadhaar';
+      } else if (query.includes('mobile') || query.includes('phone') || query.includes('number') || query.includes('sim')) {
+        matchedWf = 'update-mobile';
+      } else if (query.includes('name') || query.includes('spelling') || query.includes('rename')) {
+        matchedWf = 'update-name';
+      } else if (query.includes('status') || query.includes('track') || query.includes('check')) {
+        matchedWf = 'check-status';
+      } else if (query.includes('dob') || query.includes('birth') || query.includes('date')) {
+        matchedWf = 'update-dob';
+      }
+
+      this.processKnowledge.setActiveSubWorkflow(matchedWf);
+      this.startVisualGuideMode();
+      this.showToast(`Starting visual guide: ${matchedWf.replace('-', ' ')}`, 'info');
+    };
+
+    document.getElementById('btnLaunchSearchGuide')?.addEventListener('click', launchFromSearch);
+    document.getElementById('aiServiceSearchInput')?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') launchFromSearch();
+    });
+
     // Quick workflow chips
     document.querySelectorAll('.service-chip').forEach(chip => {
       chip.addEventListener('click', () => {

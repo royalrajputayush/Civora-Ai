@@ -42,60 +42,76 @@
   <!-- ===== MAIN CONTAINER ===== -->
   <main class="app-main">
 
-    <!-- ===== LANDING / HOME VIEW ===== -->
+    <!-- ===== LANDING / HOME VIEW (Action-Oriented AI Interface) ===== -->
     <section class="landing-section" id="landingSection">
       <div class="hero-container">
+        
+        <!-- Immediate 3-Second Headline -->
         <div class="hero-badge">
-          <span class="hero-badge-pill">V1 MVP</span>
-          <span>Resident Portal AI Assistant</span>
+          <span class="badge-dot"></span>
+          <span>AI Resident Service Navigator</span>
         </div>
 
         <h1 class="hero-title">
-          Complete portal tasks <br class="desktop-only">without the <span class="gradient-text">confusion</span>
+          Stuck on a government portal?
         </h1>
 
         <p class="hero-subtitle">
-          Interactive visual walkthroughs and instant screenshot guidance for Aadhaar, PAN, and government identity services. Simple, fast, and 100% private.
+          Civora shows you exactly where to click and what to fill next. Simple, private, and instant.
         </p>
 
-        <!-- Primary Mode Launch Cards -->
-        <div class="mode-launch-grid">
-          <!-- Mode 1: Visual Walkthrough (Default & Recommended) -->
-          <div class="mode-card-v1 primary-mode" id="cardVisualMode">
-            <div class="mode-card-header">
-              <div class="mode-icon-v1">🗺️</div>
-              <span class="tag-badge recommended">⭐ 100% Private — Zero Permissions</span>
-            </div>
-            <h3>Visual Step-by-Step Guide</h3>
-            <p>
-              See simulated portal screens with highlighted buttons. You perform every action yourself on the official website.
-            </p>
-            <div class="mode-card-features">
-              <span>✓ Visual screen mockups</span>
-              <span>✓ Glowing click targets</span>
-              <span>✓ No screen sharing</span>
-            </div>
-            <button class="btn btn-primary btn-block">
-              <span>Start Visual Guide</span>
+        <!-- Intelligent AI Action Bar -->
+        <div class="ai-prompt-box">
+          <div class="prompt-input-wrapper">
+            <span class="prompt-icon">✨</span>
+            <input type="text" id="aiServiceSearchInput" class="ai-search-input" 
+                   placeholder="What do you need help with? (e.g. Update address, download Aadhaar...)"
+                   autocomplete="off">
+            <button class="btn btn-primary" id="btnLaunchSearchGuide">
+              <span>Start Guide</span>
               <span>→</span>
             </button>
           </div>
 
-          <!-- Mode 2: Screenshot AI Guide -->
+          <!-- Quick Service Chips -->
+          <div class="prompt-quick-chips">
+            <span class="chips-label">Popular:</span>
+            <button class="service-chip" data-workflow="update-address">📍 Update Address</button>
+            <button class="service-chip" data-workflow="download-aadhaar">📥 Download e-Aadhaar</button>
+            <button class="service-chip" data-workflow="update-mobile">📱 Link Mobile</button>
+            <button class="service-chip" data-workflow="update-name">✏️ Fix Name</button>
+            <button class="service-chip" data-workflow="check-status">🔍 Track Status</button>
+          </div>
+        </div>
+
+        <!-- Primary Action Cards (Above The Fold) -->
+        <div class="mode-launch-grid">
+          <!-- Action 1: Visual Interactive Walkthrough -->
+          <div class="mode-card-v1 primary-mode" id="cardVisualMode">
+            <div class="mode-card-header">
+              <div class="mode-icon-v1">🗺️</div>
+              <span class="tag-badge recommended">⭐ 100% Private — No Screen Share</span>
+            </div>
+            <h3>Visual Step-by-Step Guide</h3>
+            <p>
+              Follow interactive screen mockups with highlighted click targets. You do the actions yourself on the official website.
+            </p>
+            <button class="btn btn-primary btn-block">
+              <span>Launch Visual Guide</span>
+              <span>→</span>
+            </button>
+          </div>
+
+          <!-- Action 2: Screenshot AI Diagnosis -->
           <div class="mode-card-v1" id="cardScreenshotMode">
             <div class="mode-card-header">
               <div class="mode-icon-v1">📸</div>
               <span class="tag-badge">⚡ Instant AI Analysis</span>
             </div>
-            <h3>Screenshot Guidance</h3>
+            <h3>Screenshot AI Diagnosis</h3>
             <p>
-              Upload or paste a screenshot of where you are stuck. Gemini AI inspects your screen and tells you what to click next.
+              Drop or paste a screenshot of where you are stuck. Gemini AI scans the screen and highlights your next action.
             </p>
-            <div class="mode-card-features">
-              <span>✓ Paste from clipboard</span>
-              <span>✓ Instant button detection</span>
-              <span>✓ Error troubleshooting</span>
-            </div>
             <button class="btn btn-secondary btn-block">
               <span>Upload Screenshot</span>
               <span>→</span>
@@ -103,44 +119,24 @@
           </div>
         </div>
 
-        <!-- Quick Workflow Chips -->
-        <div class="quick-services-section">
-          <span class="quick-label">Or jump straight to a service:</span>
-          <div class="service-chips-row">
-            <button class="service-chip" data-workflow="update-address">📍 Change Address</button>
-            <button class="service-chip" data-workflow="download-aadhaar">📥 Download e-Aadhaar</button>
-            <button class="service-chip" data-workflow="update-mobile">📱 Update Mobile</button>
-            <button class="service-chip" data-workflow="update-name">✏️ Correct Name</button>
-            <button class="service-chip" data-workflow="check-status">🔍 Check Status</button>
+        <!-- How Civora Works (3-Second Mental Model) -->
+        <div class="mental-model-row">
+          <div class="model-step">
+            <span class="model-num">1</span>
+            <span>Choose service or drop screenshot</span>
+          </div>
+          <span class="model-arrow">➔</span>
+          <div class="model-step">
+            <span class="model-num">2</span>
+            <span>Civora highlights the exact button</span>
+          </div>
+          <span class="model-arrow">➔</span>
+          <div class="model-step">
+            <span class="model-num">3</span>
+            <span>Complete safely on official portal</span>
           </div>
         </div>
 
-        <!-- Minimal 3-Step Process Flow -->
-        <div class="simple-steps-banner">
-          <div class="step-item-simple">
-            <span class="step-num-simple">1</span>
-            <div>
-              <strong>Choose Service</strong>
-              <p>Select what you want to do</p>
-            </div>
-          </div>
-          <div class="step-arrow-simple">→</div>
-          <div class="step-item-simple">
-            <span class="step-num-simple">2</span>
-            <div>
-              <strong>Follow Highlights</strong>
-              <p>See exactly where to click</p>
-            </div>
-          </div>
-          <div class="step-arrow-simple">→</div>
-          <div class="step-item-simple">
-            <span class="step-num-simple">3</span>
-            <div>
-              <strong>Done in Minutes</strong>
-              <p>Submit safely on official site</p>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
 
