@@ -83,14 +83,19 @@ class CivoraApp {
       this.showToast(e.detail.message, e.detail.type);
     });
 
-    // Listen for popup ready signal
+    // Listen for popup ready and navigation signals
     window.addEventListener('message', (e) => {
       if (e.data?.type === 'civora:popup-ready') {
         this.popupReady = true;
-        // Send current state if we have one
-        if (this.isLiveActive) {
+        if (this.currentView === 'visual') {
+          this.renderVisualStep(this.visualStepIndex);
+        } else if (this.isLiveActive) {
           this.sendToPopup({ type: 'civora:ping' });
         }
+      } else if (e.data?.type === 'civora:request-next-step') {
+        this.nextVisualStep();
+      } else if (e.data?.type === 'civora:request-prev-step') {
+        this.prevVisualStep();
       }
     });
   }
@@ -699,6 +704,20 @@ class CivoraApp {
     const mockupContainer = document.getElementById('visualMockupContainer');
     if (mockupContainer) {
       mockupContainer.innerHTML = this.mockupRenderer.renderMockupHTML(step, subWorkflow?.id || 'update-address');
+
+      // Bind interactive click handlers to targets inside the visual mockup
+      mockupContainer.querySelectorAll('.clickable-target, .target-hotspot, [data-action="next-step"], .portal-card').forEach((el) => {
+        el.style.cursor = 'pointer';
+        el.addEventListener('click', (ev) => {
+          ev.preventDefault();
+          ev.stopPropagation();
+          el.classList.add('hotspot-clicked');
+          this.showToast(`Simulated: Clicked "${step.targetElement || step.name}"`, 'success');
+          setTimeout(() => {
+            this.nextVisualStep();
+          }, 350);
+        });
+      });
     }
 
     // Update Step Controls Panel

@@ -2234,13 +2234,44 @@ body {
   color: #64748B;
 }
 
-/* TARGET HOTSPOT GLOWING HIGHLIGHT */
+/* TARGET HOTSPOT GLOWING HIGHLIGHT & CLICKABLE TARGETS */
 .target-hotspot {
   position: relative;
   outline: 3px solid #7952FC !important;
   box-shadow: 0 0 25px rgba(121, 82, 252, 0.6) !important;
   background: rgba(121, 82, 252, 0.08) !important;
   animation: hotspotPulse 2s infinite alternate;
+}
+
+.clickable-target {
+  cursor: pointer !important;
+  transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.2s ease !important;
+}
+
+.clickable-target:hover {
+  transform: scale(1.03) translateY(-2px) !important;
+  box-shadow: 0 0 35px rgba(0, 240, 255, 0.8), 0 0 15px rgba(121, 82, 252, 0.9) !important;
+}
+
+.clickable-target:active, .hotspot-clicked {
+  animation: clickRipple 0.35s ease-out forwards !important;
+}
+
+@keyframes clickRipple {
+  0% { transform: scale(0.96); filter: brightness(1.5); }
+  50% { transform: scale(1.08); filter: brightness(2); }
+  100% { transform: scale(1); filter: brightness(1); }
+}
+
+.interactive-card {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.interactive-card:hover {
+  transform: translateY(-2px);
+  border-color: #3B82F6;
+  background: #F8FAFC;
 }
 
 .hotspot-badge {

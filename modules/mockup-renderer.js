@@ -93,7 +93,9 @@ export class MockupRenderer {
             <span class="gov-title">Unique Identification Authority of India</span>
             <span class="portal-name">myAadhaar — Resident Portal</span>
           </div>
-          <div class="portal-login-badge">${targetElement.toLowerCase().includes('login') ? '<span class="spotlight-pulse"></span>' : ''} Login</div>
+          <div class="portal-login-badge ${targetElement.toLowerCase().includes('login') ? 'target-hotspot clickable-target' : ''}" data-action="next-step">
+            ${targetElement.toLowerCase().includes('login') ? '<span class="spotlight-pulse"></span>' : ''} Login
+          </div>
         </div>
 
         <div class="portal-hero-banner">
@@ -102,32 +104,32 @@ export class MockupRenderer {
         </div>
 
         <div class="portal-service-grid">
-          <div class="portal-card ${targetElement.toLowerCase().includes('download') ? 'target-hotspot' : ''}">
+          <div class="portal-card ${targetElement.toLowerCase().includes('download') ? 'target-hotspot clickable-target' : 'interactive-card'}" data-action="next-step">
             <div class="card-icon">📥</div>
             <h4>Download Aadhaar</h4>
             <p>Get password-protected electronic copy</p>
-            ${targetElement.toLowerCase().includes('download') ? '<div class="hotspot-badge">👆 Tap Here</div>' : ''}
+            ${targetElement.toLowerCase().includes('download') ? '<div class="hotspot-badge">👆 Tap Here to Continue</div>' : ''}
           </div>
 
-          <div class="portal-card ${targetElement.toLowerCase().includes('address') || targetElement.toLowerCase().includes('update') ? 'target-hotspot' : ''}">
+          <div class="portal-card ${targetElement.toLowerCase().includes('address') || targetElement.toLowerCase().includes('update') ? 'target-hotspot clickable-target' : 'interactive-card'}" data-action="next-step">
             <div class="card-icon">📍</div>
             <h4>Update Address</h4>
             <p>Update residential address with document</p>
-            ${targetElement.toLowerCase().includes('address') || targetElement.toLowerCase().includes('update') ? '<div class="hotspot-badge">👆 Tap Here</div>' : ''}
+            ${targetElement.toLowerCase().includes('address') || targetElement.toLowerCase().includes('update') ? '<div class="hotspot-badge">👆 Tap Here to Continue</div>' : ''}
           </div>
 
-          <div class="portal-card ${targetElement.toLowerCase().includes('status') ? 'target-hotspot' : ''}">
+          <div class="portal-card ${targetElement.toLowerCase().includes('status') ? 'target-hotspot clickable-target' : 'interactive-card'}" data-action="next-step">
             <div class="card-icon">🔍</div>
             <h4>Check Status</h4>
             <p>Track request using SRN or URN</p>
-            ${targetElement.toLowerCase().includes('status') ? '<div class="hotspot-badge">👆 Tap Here</div>' : ''}
+            ${targetElement.toLowerCase().includes('status') ? '<div class="hotspot-badge">👆 Tap Here to Continue</div>' : ''}
           </div>
 
-          <div class="portal-card ${targetElement.toLowerCase().includes('mobile') ? 'target-hotspot' : ''}">
+          <div class="portal-card ${targetElement.toLowerCase().includes('mobile') ? 'target-hotspot clickable-target' : 'interactive-card'}" data-action="next-step">
             <div class="card-icon">📱</div>
             <h4>Book Appointment</h4>
             <p>For Mobile, Name, Biometrics update</p>
-            ${targetElement.toLowerCase().includes('mobile') ? '<div class="hotspot-badge">👆 Tap Here</div>' : ''}
+            ${targetElement.toLowerCase().includes('mobile') ? '<div class="hotspot-badge">👆 Tap Here to Continue</div>' : ''}
           </div>
         </div>
       </div>
@@ -178,9 +180,9 @@ export class MockupRenderer {
 
           <div class="form-actions">
             <button class="portal-btn">Back</button>
-            <button class="portal-btn primary target-hotspot">
+            <button class="portal-btn primary target-hotspot clickable-target" data-action="next-step">
               Next Step (Upload Document) →
-              <div class="hotspot-badge">👆 Click Next</div>
+              <div class="hotspot-badge">👆 Click to Proceed</div>
             </button>
           </div>
         </div>
@@ -199,19 +201,19 @@ export class MockupRenderer {
         <div class="portal-upload-box">
           <div class="upload-dropdown-section">
             <label>Select Valid Supporting Document Type *</label>
-            <div class="fake-select target-hotspot">
+            <div class="fake-select target-hotspot clickable-target" data-action="next-step">
               <span>Electricity Bill (not older than 3 months)</span>
               <span class="arrow">▼</span>
               <div class="hotspot-badge">👆 Select Document</div>
             </div>
           </div>
 
-          <div class="upload-dropzone target-hotspot">
+          <div class="upload-dropzone target-hotspot clickable-target" data-action="next-step">
             <div class="drop-icon">📎</div>
             <h4>Upload Document (Max 2MB - PDF/JPG/PNG)</h4>
             <p>Ensure your name and address are clearly visible</p>
             <div class="fake-upload-btn">Upload File</div>
-            <div class="hotspot-badge">👆 Upload Here</div>
+            <div class="hotspot-badge">👆 Tap to Upload & Continue</div>
           </div>
         </div>
       </div>
@@ -254,7 +256,10 @@ export class MockupRenderer {
           </div>
 
           <div class="form-actions">
-            <button class="portal-btn primary">Login / Verify</button>
+            <button class="portal-btn primary target-hotspot clickable-target" data-action="next-step">
+              Login / Verify OTP →
+              <div class="hotspot-badge">👆 Tap to Verify</div>
+            </button>
           </div>
         </div>
       </div>
@@ -274,11 +279,11 @@ export class MockupRenderer {
           <h3>Congratulations! Your e-Aadhaar is ready</h3>
           <p>The PDF is password protected (First 4 letters of name in CAPITAL + Birth Year, e.g. ANIS1995)</p>
           
-          <div class="download-action target-hotspot">
+          <div class="download-action target-hotspot clickable-target" data-action="next-step">
             <button class="portal-btn download-large">
               <span>📥</span> Download e-Aadhaar PDF
             </button>
-            <div class="hotspot-badge">👆 Tap Download</div>
+            <div class="hotspot-badge">👆 Tap to Download</div>
           </div>
         </div>
       </div>
