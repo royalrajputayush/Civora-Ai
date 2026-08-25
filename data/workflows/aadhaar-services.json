@@ -1,0 +1,458 @@
+{
+  "id": "aadhaar-services",
+  "name": "Aadhaar Online Services",
+  "description": "Navigate UIDAI Aadhaar portal for common services like address update, mobile update, and download.",
+  "service_url": "https://uidai.gov.in",
+
+  "commonSteps": [
+    {
+      "id": "landing",
+      "name": "UIDAI Home Page",
+      "description": "The main landing page of the UIDAI website",
+      "expectedElements": ["My Aadhaar", "Aadhaar Services", "Online Services", "Get Aadhaar", "Update Aadhaar"],
+      "nextAction": "Look for and tap on 'My Aadhaar' or 'Aadhaar Services' in the navigation menu",
+      "targetElement": "My Aadhaar menu item or Aadhaar Services link",
+      "tips": "The main navigation is usually at the top of the page"
+    },
+    {
+      "id": "aadhaar-services-menu",
+      "name": "Aadhaar Services Menu",
+      "description": "The dropdown or page showing available Aadhaar services",
+      "expectedElements": ["Update Aadhaar", "Download Aadhaar", "Check Aadhaar Status", "Verify Aadhaar", "Book Appointment", "Order Aadhaar Reprint"],
+      "nextAction": "Select the specific service you need from the list",
+      "targetElement": "The service option that matches your requirement",
+      "tips": "Common services include Update Aadhaar (for address/mobile changes) and Download Aadhaar"
+    },
+    {
+      "id": "update-aadhaar-portal",
+      "name": "Aadhaar Update Portal",
+      "description": "The Self Service Update Portal (SSUP) for updating Aadhaar details online",
+      "expectedElements": ["Aadhaar Number", "Enter Aadhaar", "Captcha", "Send OTP", "Proceed"],
+      "nextAction": "Enter your 12-digit Aadhaar number in the input field",
+      "targetElement": "Aadhaar Number input field",
+      "tips": "Make sure to enter all 12 digits correctly"
+    },
+    {
+      "id": "captcha-verification",
+      "name": "CAPTCHA Verification",
+      "description": "Security CAPTCHA that needs to be filled manually",
+      "expectedElements": ["Captcha image", "Enter Captcha", "Captcha input field"],
+      "nextAction": "Enter the CAPTCHA text shown in the image",
+      "targetElement": "CAPTCHA input field",
+      "tips": "Civora cannot solve CAPTCHAs for you — please read and enter the characters yourself",
+      "securityBoundary": true
+    },
+    {
+      "id": "otp-request",
+      "name": "Request OTP",
+      "description": "Screen to request OTP on registered mobile number",
+      "expectedElements": ["Send OTP", "Request OTP", "Verify", "Registered Mobile"],
+      "nextAction": "Tap 'Send OTP' to receive a verification code on your registered mobile",
+      "targetElement": "Send OTP button",
+      "tips": "OTP will be sent to your Aadhaar-registered mobile number"
+    },
+    {
+      "id": "otp-entry",
+      "name": "Enter OTP",
+      "description": "Screen where user enters the OTP received on their phone",
+      "expectedElements": ["Enter OTP", "OTP input", "Verify", "Submit", "Resend OTP"],
+      "nextAction": "Enter the OTP you received on your mobile and tap Verify/Submit",
+      "targetElement": "OTP input field",
+      "tips": "Check your SMS for the OTP. If not received, you can tap Resend OTP",
+      "securityBoundary": true
+    }
+  ],
+
+  "subWorkflows": [
+    {
+      "id": "update-address",
+      "name": "Update Address",
+      "icon": "📍",
+      "description": "Change your residential address on Aadhaar card",
+      "requiredDocuments": ["Passport", "Bank Statement", "Utility Bill", "Rental Agreement", "Voter ID"],
+      "estimatedTime": "10-15 minutes",
+      "steps": [
+        {
+          "id": "select-address-field",
+          "name": "Select Address Update",
+          "description": "Choose Address as the field to update",
+          "expectedElements": ["Address", "Name", "Date of Birth", "Gender", "Select", "Checkbox"],
+          "nextAction": "Select the checkbox next to 'Address' and tap Proceed/Next",
+          "targetElement": "Address checkbox",
+          "tips": "Only select 'Address' — do not select other fields unless you want to update them too"
+        },
+        {
+          "id": "fill-address-form",
+          "name": "Fill New Address",
+          "description": "Enter your new address details",
+          "expectedElements": ["Care of", "House/Building", "Street", "Landmark", "Locality", "Village/Town/City", "Post Office", "District", "State", "Pin Code"],
+          "nextAction": "Fill in your new address starting with the Care of / House Number field",
+          "targetElement": "The first empty required address field",
+          "tips": "Fill all mandatory fields marked with *. Use the exact address as it appears on your proof document"
+        },
+        {
+          "id": "upload-address-proof",
+          "name": "Upload Address Proof",
+          "description": "Upload a supporting document as proof of new address",
+          "expectedElements": ["Upload", "Choose File", "Browse", "Document Type", "Proof of Address", "Passport", "Bank Statement", "Utility Bill"],
+          "nextAction": "Select your document type from the dropdown, then upload a clear scan/photo of your proof document",
+          "targetElement": "Document Type dropdown, then Choose File button",
+          "tips": "Accepted: Passport, Bank Statement (≤3 months old), Utility Bill, Rental Agreement. File must be JPG/PNG/PDF under 2MB"
+        },
+        {
+          "id": "review-address",
+          "name": "Review Address Details",
+          "description": "Review the updated address before submission",
+          "expectedElements": ["Review", "Confirm", "Submit", "Edit", "Back", "New Address", "Old Address"],
+          "nextAction": "Compare old and new address, then tap Submit/Confirm",
+          "targetElement": "Submit / Confirm button",
+          "tips": "Double-check your new address matches your proof document exactly"
+        },
+        {
+          "id": "confirmation",
+          "name": "Confirmation & URN",
+          "description": "Success confirmation with tracking number",
+          "expectedElements": ["Success", "URN", "Update Request Number", "Track", "Done", "Print"],
+          "nextAction": "Note down or save your Update Request Number (URN) for future tracking",
+          "targetElement": "URN / Update Request Number",
+          "tips": "Take a screenshot! You'll need this URN to track your update. Address updates typically take 5-10 days"
+        }
+      ]
+    },
+    {
+      "id": "update-mobile",
+      "name": "Update Mobile Number",
+      "icon": "📱",
+      "description": "Link a new mobile number to your Aadhaar",
+      "requiredDocuments": ["Visit Aadhaar Enrolment Centre required for mobile update"],
+      "estimatedTime": "5-10 minutes (online part)",
+      "steps": [
+        {
+          "id": "mobile-update-info",
+          "name": "Mobile Update Information",
+          "description": "Information about mobile number update process",
+          "expectedElements": ["Mobile", "Phone", "Update", "Enrolment Centre", "Book Appointment", "Locate Centre"],
+          "nextAction": "Note: Mobile number can only be updated by visiting an Aadhaar Enrolment Centre. Tap 'Book Appointment' or 'Locate Enrolment Centre'",
+          "targetElement": "Book Appointment or Locate Centre link",
+          "tips": "Mobile number cannot be changed online — you must visit a centre in person with your original Aadhaar and a new mobile"
+        },
+        {
+          "id": "book-appointment",
+          "name": "Book Appointment",
+          "description": "Book an appointment at an Aadhaar Enrolment Centre",
+          "expectedElements": ["City", "State", "Locality", "Search", "Available Centres", "Date", "Time Slot", "Book"],
+          "nextAction": "Select your city/state and search for nearby Aadhaar Enrolment Centres",
+          "targetElement": "City/State dropdown or Search field",
+          "tips": "Choose a centre near you. Most centres accept walk-ins too, but booking saves waiting time"
+        },
+        {
+          "id": "select-centre",
+          "name": "Select Centre & Time",
+          "description": "Choose a specific centre and appointment time",
+          "expectedElements": ["Centre Name", "Address", "Timing", "Select", "Book Slot", "Date", "Available"],
+          "nextAction": "Select a centre from the list, pick a date and time slot, then tap Book",
+          "targetElement": "Book Slot / Select button for your preferred centre",
+          "tips": "Carry original Aadhaar, valid ID proof, and your new mobile phone to the appointment"
+        },
+        {
+          "id": "appointment-confirmation",
+          "name": "Appointment Confirmation",
+          "description": "Appointment booking confirmation",
+          "expectedElements": ["Booking ID", "Appointment", "Confirmed", "Date", "Time", "Centre Address", "Print"],
+          "nextAction": "Save or screenshot your appointment details — Booking ID, Date, Time, and Centre Address",
+          "targetElement": "Booking ID / Appointment details",
+          "tips": "Reach 15 minutes early. Carry: Aadhaar card, ID proof, new mobile phone (for OTP verification at centre)"
+        }
+      ]
+    },
+    {
+      "id": "update-dob",
+      "name": "Update Date of Birth",
+      "icon": "📅",
+      "description": "Correct or update your date of birth on Aadhaar",
+      "requiredDocuments": ["Birth Certificate", "Passport", "SSLC/10th Marksheet", "PAN Card"],
+      "estimatedTime": "10-15 minutes",
+      "steps": [
+        {
+          "id": "select-dob-field",
+          "name": "Select Date of Birth",
+          "description": "Choose Date of Birth as the field to update",
+          "expectedElements": ["Address", "Name", "Date of Birth", "DOB", "Gender", "Select", "Checkbox"],
+          "nextAction": "Select the checkbox next to 'Date of Birth' and tap Proceed/Next",
+          "targetElement": "Date of Birth checkbox",
+          "tips": "DOB can only be updated once online. Make sure your proof document has the correct date"
+        },
+        {
+          "id": "enter-new-dob",
+          "name": "Enter New Date of Birth",
+          "description": "Enter the correct date of birth",
+          "expectedElements": ["Date", "Month", "Year", "DD/MM/YYYY", "Calendar", "Date of Birth", "New Date"],
+          "nextAction": "Enter your correct date of birth using the date picker or input fields (DD/MM/YYYY format)",
+          "targetElement": "Date of Birth input field or date picker",
+          "tips": "Enter the date exactly as it appears on your proof document. Format: DD/MM/YYYY"
+        },
+        {
+          "id": "upload-dob-proof",
+          "name": "Upload DOB Proof",
+          "description": "Upload a supporting document proving your date of birth",
+          "expectedElements": ["Upload", "Choose File", "Browse", "Document Type", "Proof of DOB", "Birth Certificate", "Passport", "Marksheet"],
+          "nextAction": "Select your DOB proof type from the dropdown, then upload a clear scan/photo",
+          "targetElement": "Document Type dropdown, then Choose File button",
+          "tips": "Accepted: Birth Certificate, Passport, SSLC/10th Marksheet, PAN Card. File must be JPG/PNG/PDF under 2MB"
+        },
+        {
+          "id": "review-dob",
+          "name": "Review DOB Update",
+          "description": "Review the date of birth change before submission",
+          "expectedElements": ["Review", "Confirm", "Submit", "Old DOB", "New DOB", "Edit", "Back"],
+          "nextAction": "Verify old and new DOB are correct, then tap Submit/Confirm",
+          "targetElement": "Submit / Confirm button",
+          "tips": "Carefully verify — DOB update is allowed only once via the online portal"
+        },
+        {
+          "id": "confirmation",
+          "name": "Confirmation & URN",
+          "description": "Success confirmation with tracking number",
+          "expectedElements": ["Success", "URN", "Update Request Number", "Track", "Done", "Print"],
+          "nextAction": "Note down or save your Update Request Number (URN) for future tracking",
+          "targetElement": "URN / Update Request Number",
+          "tips": "Take a screenshot! DOB updates may take 7-15 days to reflect. Track status using your URN"
+        }
+      ]
+    },
+    {
+      "id": "update-name",
+      "name": "Update Name",
+      "icon": "✏️",
+      "description": "Correct or change your name on Aadhaar card",
+      "requiredDocuments": ["Passport", "PAN Card", "Voter ID", "Marriage Certificate (for name change after marriage)"],
+      "estimatedTime": "10-15 minutes",
+      "steps": [
+        {
+          "id": "select-name-field",
+          "name": "Select Name Update",
+          "description": "Choose Name as the field to update",
+          "expectedElements": ["Address", "Name", "Date of Birth", "Gender", "Select", "Checkbox"],
+          "nextAction": "Select the checkbox next to 'Name' and tap Proceed/Next",
+          "targetElement": "Name checkbox",
+          "tips": "Name can be updated up to 2 times online. For more changes, visit an Enrolment Centre"
+        },
+        {
+          "id": "enter-new-name",
+          "name": "Enter New Name",
+          "description": "Enter the corrected or new name",
+          "expectedElements": ["First Name", "Middle Name", "Last Name", "Full Name", "Name input"],
+          "nextAction": "Enter your correct/new name in the input fields",
+          "targetElement": "Name input field(s)",
+          "tips": "Enter the name exactly as it appears on your proof document. Avoid abbreviations"
+        },
+        {
+          "id": "upload-name-proof",
+          "name": "Upload Name Proof",
+          "description": "Upload a supporting document proving your name",
+          "expectedElements": ["Upload", "Choose File", "Browse", "Document Type", "Proof of Identity", "Passport", "PAN Card", "Voter ID"],
+          "nextAction": "Select your proof type from the dropdown, then upload a clear scan/photo",
+          "targetElement": "Document Type dropdown, then Choose File button",
+          "tips": "Accepted: Passport, PAN Card, Voter ID, Marriage Certificate. File must be JPG/PNG/PDF under 2MB"
+        },
+        {
+          "id": "review-name",
+          "name": "Review Name Update",
+          "description": "Review the name change before submission",
+          "expectedElements": ["Review", "Confirm", "Submit", "Old Name", "New Name", "Edit", "Back"],
+          "nextAction": "Verify old and new name are correct, then tap Submit/Confirm",
+          "targetElement": "Submit / Confirm button",
+          "tips": "Double-check spelling. Name changes may take 7-15 days to process"
+        },
+        {
+          "id": "confirmation",
+          "name": "Confirmation & URN",
+          "description": "Success confirmation with tracking number",
+          "expectedElements": ["Success", "URN", "Update Request Number", "Track", "Done", "Print"],
+          "nextAction": "Note down or save your Update Request Number (URN) for future tracking",
+          "targetElement": "URN / Update Request Number",
+          "tips": "Take a screenshot! Track your name update status using this URN"
+        }
+      ]
+    },
+    {
+      "id": "update-biometric",
+      "name": "Update Biometrics",
+      "icon": "🖐️",
+      "description": "Update fingerprints, iris scan, or photo on Aadhaar",
+      "requiredDocuments": ["Original Aadhaar Card", "Valid ID Proof"],
+      "estimatedTime": "15-20 minutes (at centre)",
+      "steps": [
+        {
+          "id": "biometric-update-info",
+          "name": "Biometric Update Information",
+          "description": "Information about biometric update process",
+          "expectedElements": ["Biometric", "Fingerprint", "Iris", "Photo", "Enrolment Centre", "Book Appointment", "Locate Centre"],
+          "nextAction": "Note: Biometric update requires an in-person visit to an Aadhaar Enrolment Centre. Tap 'Book Appointment' or 'Locate Enrolment Centre'",
+          "targetElement": "Book Appointment or Locate Centre link",
+          "tips": "Biometrics (fingerprint, iris, photo) cannot be updated online — you must visit a centre in person"
+        },
+        {
+          "id": "book-appointment",
+          "name": "Book Appointment",
+          "description": "Book an appointment at an Aadhaar Enrolment Centre",
+          "expectedElements": ["City", "State", "Locality", "Search", "Available Centres", "Date", "Time Slot", "Book"],
+          "nextAction": "Select your city/state and search for nearby Aadhaar Enrolment Centres",
+          "targetElement": "City/State dropdown or Search field",
+          "tips": "UIDAI recommends updating biometrics every 10 years. It's mandatory for children at age 5 and 15"
+        },
+        {
+          "id": "select-centre",
+          "name": "Select Centre & Time",
+          "description": "Choose a specific centre and appointment time",
+          "expectedElements": ["Centre Name", "Address", "Timing", "Select", "Book Slot", "Date", "Available"],
+          "nextAction": "Select a centre from the list, pick a date and time slot, then tap Book",
+          "targetElement": "Book Slot / Select button for your preferred centre",
+          "tips": "Carry original Aadhaar card and valid ID proof to the centre"
+        },
+        {
+          "id": "appointment-confirmation",
+          "name": "Appointment Confirmation",
+          "description": "Appointment booking confirmation",
+          "expectedElements": ["Booking ID", "Appointment", "Confirmed", "Date", "Time", "Centre Address", "Print"],
+          "nextAction": "Save or screenshot your appointment details",
+          "targetElement": "Booking ID / Appointment details",
+          "tips": "At the centre: Your fingerprints, iris scan, and photo will be re-captured. No documents needed beyond Aadhaar and ID proof"
+        }
+      ]
+    },
+    {
+      "id": "update-email",
+      "name": "Update Email",
+      "icon": "📧",
+      "description": "Add or change email address linked to Aadhaar",
+      "requiredDocuments": ["No documents needed — email verification via OTP"],
+      "estimatedTime": "5-8 minutes",
+      "steps": [
+        {
+          "id": "select-email-field",
+          "name": "Select Email Update",
+          "description": "Choose Email as the field to update",
+          "expectedElements": ["Address", "Name", "Email", "Date of Birth", "Gender", "Select", "Checkbox"],
+          "nextAction": "Select the checkbox next to 'Email' and tap Proceed/Next",
+          "targetElement": "Email checkbox",
+          "tips": "Email update does not require any document upload"
+        },
+        {
+          "id": "enter-new-email",
+          "name": "Enter New Email",
+          "description": "Enter your new email address",
+          "expectedElements": ["Email", "Email Address", "Input", "Enter Email", "Confirm Email"],
+          "nextAction": "Enter your new email address and confirm it",
+          "targetElement": "Email input field",
+          "tips": "Enter a valid email address you have access to — you may need to verify it"
+        },
+        {
+          "id": "verify-email",
+          "name": "Verify Email",
+          "description": "Verify the new email via OTP or link",
+          "expectedElements": ["Verify", "OTP", "Verification Code", "Confirm", "Submit"],
+          "nextAction": "Check your email for a verification code/link and enter it here",
+          "targetElement": "Verification code input or Verify button",
+          "tips": "Check your inbox and spam folder for the verification email"
+        },
+        {
+          "id": "confirmation",
+          "name": "Confirmation",
+          "description": "Email update confirmation",
+          "expectedElements": ["Success", "Updated", "Email", "Confirmed", "Done"],
+          "nextAction": "Your email has been updated successfully. You can close this page",
+          "targetElement": "Done / Close button",
+          "tips": "Email updates reflect immediately on your Aadhaar records"
+        }
+      ]
+    },
+    {
+      "id": "download-aadhaar",
+      "name": "Download e-Aadhaar",
+      "icon": "📥",
+      "description": "Download a digital copy of your Aadhaar card",
+      "requiredDocuments": ["Registered mobile number for OTP"],
+      "estimatedTime": "3-5 minutes",
+      "steps": [
+        {
+          "id": "download-portal",
+          "name": "Download Aadhaar Page",
+          "description": "The e-Aadhaar download portal",
+          "expectedElements": ["Aadhaar Number", "Enrolment ID", "Virtual ID", "Download", "Captcha"],
+          "nextAction": "Select 'Aadhaar Number' option and enter your 12-digit Aadhaar number",
+          "targetElement": "Aadhaar Number radio button and input field",
+          "tips": "You can also download using Enrolment ID or Virtual ID if you have them"
+        },
+        {
+          "id": "download-otp-verify",
+          "name": "Verify OTP for Download",
+          "description": "Enter OTP to verify identity for download",
+          "expectedElements": ["OTP", "Enter OTP", "Verify", "Submit", "Resend"],
+          "nextAction": "Enter the OTP received on your registered mobile number",
+          "targetElement": "OTP input field",
+          "tips": "The OTP is sent to your Aadhaar-linked mobile number",
+          "securityBoundary": true
+        },
+        {
+          "id": "download-file",
+          "name": "Download e-Aadhaar PDF",
+          "description": "Download the e-Aadhaar PDF file",
+          "expectedElements": ["Download", "PDF", "e-Aadhaar", "Save", "Print"],
+          "nextAction": "Tap 'Download' to save your e-Aadhaar PDF. The password is your PIN code",
+          "targetElement": "Download button",
+          "tips": "PDF password = first 4 letters of your name (UPPERCASE) + year of birth (e.g., RAHM1990)"
+        }
+      ]
+    },
+    {
+      "id": "check-status",
+      "name": "Check Update Status",
+      "icon": "🔍",
+      "description": "Track the status of a pending Aadhaar update request",
+      "requiredDocuments": ["Update Request Number (URN)"],
+      "estimatedTime": "2-3 minutes",
+      "steps": [
+        {
+          "id": "status-portal",
+          "name": "Status Check Portal",
+          "description": "The Aadhaar update status tracking page",
+          "expectedElements": ["Aadhaar Number", "URN", "Update Request Number", "Captcha", "Check Status"],
+          "nextAction": "Enter your Aadhaar number and URN (Update Request Number)",
+          "targetElement": "Aadhaar Number and URN input fields",
+          "tips": "You received the URN when you submitted your update request"
+        },
+        {
+          "id": "status-captcha",
+          "name": "Enter CAPTCHA",
+          "description": "Solve the CAPTCHA for status check",
+          "expectedElements": ["Captcha", "Enter Captcha", "Security Code"],
+          "nextAction": "Enter the CAPTCHA text and tap Check Status/Submit",
+          "targetElement": "CAPTCHA input field and Submit button",
+          "tips": "Enter the characters as shown in the image",
+          "securityBoundary": true
+        },
+        {
+          "id": "status-result",
+          "name": "Update Status Result",
+          "description": "View the status of your update request",
+          "expectedElements": ["Status", "Pending", "Completed", "Rejected", "Processing", "Update Type", "Date"],
+          "nextAction": "Review your update status. If completed, your updated Aadhaar is ready for download",
+          "targetElement": "Status information",
+          "tips": "If rejected, you may need to re-submit with better documents. If processing, check again in 2-3 days"
+        }
+      ]
+    }
+  ],
+
+  "metadata": {
+    "category": "Identity",
+    "department": "UIDAI - Unique Identification Authority of India",
+    "securityNotes": [
+      "Civora will NOT solve CAPTCHAs",
+      "Civora will NOT enter OTPs automatically",
+      "Civora will NOT store your Aadhaar number",
+      "All screen data is processed locally and not stored"
+    ]
+  }
+}

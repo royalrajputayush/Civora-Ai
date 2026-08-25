@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Civora AI — Visual AI assistant that guides you through government services step-by-step. Live screen guidance and screenshot analysis powered by AI.">
+  <meta name="theme-color" content="#0A0A1A">
+  <meta property="og:title" content="Civora AI — Government Service Guide">
+  <meta property="og:description" content="Navigate government services with AI-powered visual guidance. One step at a time.">
+  <meta property="og:type" content="website">
+  <title>Civora AI — Government Service Guide</title>
+  <link rel="stylesheet" href="index.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>">
+</head>
+<body>
+
+  <!-- ===== 3D PARTICLE CANVAS ===== -->
+  <canvas id="particleCanvas"></canvas>
+
+  <!-- ===== NOISE TEXTURE OVERLAY ===== -->
+  <div class="noise-overlay"></div>
+
+  <!-- ===== FLOATING GLOW ORBS ===== -->
+  <div class="floating-orbs" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="orb orb-4"></div>
+  </div>
+
+  <!-- ===== CURSOR GLOW ===== -->
+  <div class="cursor-glow" id="cursorGlow"></div>
+
+  <!-- ===== APP HEADER ===== -->
+  <header class="app-header" id="appHeader">
+    <div class="header-inner">
+      <div class="logo">
+        <div class="logo-icon">🎯</div>
+        <span class="logo-text">Civora</span>
+        <span class="logo-badge">AI</span>
+      </div>
+      <div class="header-actions">
+        <div class="privacy-badge" id="privacyBadge" style="display: none;">
+          <span>🛡️</span>
+          <span>Privacy-First</span>
+        </div>
+        <button class="btn btn-ghost btn-sm" id="btnBackToModes" style="display: none;">
+          <span>←</span>
+          <span class="btn-label">Back</span>
+        </button>
+        <button class="btn btn-ghost btn-icon" id="btnSettings" title="Settings">
+          ⚙️
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== LANDING SECTION ===== -->
+  <section class="landing-section" id="landingSection">
+    <div class="hero-badge">
+      <span class="dot"></span>
+      <span>Visual AI Assistant for Government Services</span>
+    </div>
+    
+    <!-- 3D Rotating Shape -->
+    <div class="hero-3d-scene" aria-hidden="true">
+      <div class="hero-3d-shape">
+        <div class="shape-face face-front"></div>
+        <div class="shape-face face-back"></div>
+        <div class="shape-face face-left"></div>
+        <div class="shape-face face-right"></div>
+        <div class="shape-face face-top"></div>
+        <div class="shape-face face-bottom"></div>
+      </div>
+    </div>
+
+    <h1 class="hero-title">
+      Navigate government<br>
+      services with <span class="gradient-text">AI guidance</span>
+    </h1>
+    
+    <p class="hero-subtitle">
+      Civora understands your screen and tells you exactly what to do next. 
+      One simple instruction at a time — like having an expert beside you.
+    </p>
+    
+    <div class="hero-actions">
+      <button class="btn btn-primary btn-lg" id="btnGetStarted">
+        <span>🚀</span>
+        <span>Get Started</span>
+      </button>
+      <button class="btn btn-ghost btn-lg" id="btnLearnMore">
+        <span>📖</span>
+        <span>How It Works</span>
+      </button>
+    </div>
+    
+    <div class="hero-features">
+      <div class="card feature-card">
+        <div class="feature-icon">📱</div>
+        <h3>Live Screen Guidance</h3>
+        <p>Share your screen and get real-time "Tap Here" guidance as you navigate government portals.</p>
+      </div>
+      <div class="card feature-card">
+        <div class="feature-icon">📸</div>
+        <h3>Screenshot Mode</h3>
+        <p>Upload a screenshot and Civora instantly tells you what to do next. No permissions needed.</p>
+      </div>
+      <div class="card feature-card">
+        <div class="feature-icon">🔒</div>
+        <h3>Privacy-First</h3>
+        <p>Your screen data is never stored. Processed temporarily, then discarded. You're always in control.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== MODE SELECTION ===== -->
+  <section class="mode-selection" id="modeSelection">
+    <div class="mode-header">
+      <h2 class="heading-2" style="margin-bottom: var(--space-3);">Choose Your Mode</h2>
+      <p class="body-text">How would you like Civora to help you?</p>
+    </div>
+    
+    <div class="mode-cards">
+      <!-- Live Mode Card -->
+      <div class="card mode-card" id="cardLiveMode">
+        <div class="mode-icon">📱</div>
+        <span class="mode-tag recommended">⭐ Recommended</span>
+        <h3>Live Screen Guidance</h3>
+        <p>
+          Share your screen and Civora will watch what you see in real-time. 
+          It detects each step and guides you with "Tap Here" instructions automatically.
+        </p>
+        <div style="display: flex; gap: var(--space-2); flex-wrap: wrap; margin-top: var(--space-3);">
+          <span class="mode-tag">🔄 Real-time</span>
+          <span class="mode-tag">🔍 Auto-detect changes</span>
+          <span class="mode-tag">🔐 Permission required</span>
+        </div>
+      </div>
+      
+      <!-- Screenshot Mode Card -->
+      <div class="card mode-card" id="cardScreenshotMode">
+        <div class="mode-icon">📸</div>
+        <span class="mode-tag easy">✅ No Permissions</span>
+        <h3>Screenshot Guidance</h3>
+        <p>
+          Take a screenshot of your current screen and upload it. 
+          Civora analyzes the image and tells you exactly what to do next.
+        </p>
+        <div style="display: flex; gap: var(--space-2); flex-wrap: wrap; margin-top: var(--space-3);">
+          <span class="mode-tag">📎 Upload image</span>
+          <span class="mode-tag">📋 Paste from clipboard</span>
+          <span class="mode-tag">🔓 No permissions</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SERVICE SELECTION (Smart Search) ===== -->
+  <section class="service-selection" id="serviceSelection">
+    <div class="smart-search-container">
+      <div class="smart-search-hero">
+        <div class="search-hero-icon">🎯</div>
+        <h2 class="heading-2">Tell us what you need</h2>
+        <p class="body-text">Type what you want to do — Civora will find the right service for you.</p>
+      </div>
+
+      <div class="smart-search-box" id="smartSearchBox">
+        <span class="search-box-icon">🔍</span>
+        <input 
+          type="text" 
+          class="smart-search-input" 
+          id="smartSearchInput" 
+          placeholder="e.g. &quot;change my address&quot; or &quot;download aadhaar&quot;"
+          autocomplete="off"
+          spellcheck="false"
+        >
+        <button class="search-clear-btn" id="searchClearBtn" style="display: none;" title="Clear">✕</button>
+      </div>
+
+      <!-- Quick suggestion chips -->
+      <div class="search-suggestions" id="searchSuggestions">
+        <button class="suggestion-chip" data-query="update my address">📍 Change Address</button>
+        <button class="suggestion-chip" data-query="update mobile number">📱 Update Mobile</button>
+        <button class="suggestion-chip" data-query="download aadhaar card">📥 Download Aadhaar</button>
+        <button class="suggestion-chip" data-query="correct my name">✏️ Fix Name</button>
+        <button class="suggestion-chip" data-query="change date of birth">📅 Update DOB</button>
+        <button class="suggestion-chip" data-query="update biometric fingerprint">🖐️ Biometrics</button>
+        <button class="suggestion-chip" data-query="check update status">🔍 Track Status</button>
+        <button class="suggestion-chip" data-query="update email">📧 Update Email</button>
+      </div>
+
+      <!-- Search results (filtered cards) -->
+      <div class="search-results" id="searchResults">
+        <!-- Populated dynamically -->
+      </div>
+
+      <!-- Best match card (auto-selected) -->
+      <div class="best-match" id="bestMatch" style="display: none;">
+        <div class="best-match-label">
+          <span class="best-match-dot"></span>
+          Best Match
+        </div>
+        <div class="best-match-card" id="bestMatchCard">
+          <!-- Filled dynamically -->
+        </div>
+        <button class="btn btn-primary btn-lg best-match-btn" id="btnStartBestMatch">
+          <span>🚀</span>
+          <span>Start Guidance</span>
+        </button>
+        <button class="btn btn-ghost btn-sm" id="btnShowAllServices" style="margin-top: var(--space-3);">
+          Show all services instead
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== LIVE MODE WORKSPACE (Full-screen + Floating Card) ===== -->
+  <section class="workspace" id="liveModeWorkspace">
+    <!-- Full-screen capture view -->
+    <div class="live-fullscreen" id="liveFullscreen">
+      <canvas class="live-canvas-full" id="liveCanvas"></canvas>
+      <div class="live-placeholder-full" id="livePlaceholder">
+        <div class="placeholder-content">
+          <div class="placeholder-icon-lg">📱</div>
+          <h2>Start Screen Sharing</h2>
+          <p>Share your screen and Civora will guide you step-by-step through the process.</p>
+          <button class="btn btn-primary btn-lg" id="btnStartCapture">
+            <span>📱</span>
+            <span>Share My Screen</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Guidance pointer overlay -->
+      <div class="guidance-pointer" id="livePointer">
+        <div class="pointer-ring"></div>
+      </div>
+
+      <!-- Analyzing overlay -->
+      <div class="analyzing-overlay" id="liveAnalyzing">
+        <div class="analyzing-content">
+          <div class="analyzing-spinner"></div>
+          <div class="analyzing-text">Analyzing screen...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Floating top bar (shown during capture) -->
+    <div class="live-topbar" id="liveTopbar">
+      <div class="topbar-left">
+        <span class="status-dot active" id="liveStatusDot"></span>
+        <span class="topbar-title" id="livePanelTitle">Live — Capturing</span>
+      </div>
+      <div class="topbar-right">
+        <button class="btn btn-sm btn-ghost" id="btnAnalyzeNow">
+          🔍 Analyze Now
+        </button>
+        <button class="btn btn-sm btn-danger" id="btnStopCapture">
+          🛑 Stop
+        </button>
+      </div>
+    </div>
+
+    <!-- Floating Sticky Guidance Card -->
+    <div class="floating-guidance" id="floatingGuidance">
+      <div class="floating-guidance-header" id="floatingGuidanceHeader">
+        <div class="floating-guidance-drag">
+          <span class="drag-dots">⋮⋮</span>
+          <span class="floating-step-badge" id="floatingStepBadge">Step 1</span>
+        </div>
+        <div class="floating-guidance-actions">
+          <button class="btn-mini" id="btnMinimizeGuidance" title="Minimize">—</button>
+        </div>
+      </div>
+
+      <div class="floating-guidance-body" id="floatingGuidanceBody">
+        <div class="floating-instruction" id="floatingInstruction">
+          <div class="floating-instruction-icon" id="floatingActionIcon">🎯</div>
+          <div class="floating-instruction-content">
+            <div class="floating-instruction-text" id="floatingInstructionText">
+              Start screen sharing to receive guidance
+            </div>
+            <div class="floating-instruction-target" id="floatingInstructionTarget"></div>
+          </div>
+        </div>
+        <div class="floating-tip" id="floatingTip" style="display: none;">
+          <span class="tip-icon">💡</span>
+          <span id="floatingTipText"></span>
+        </div>
+        <div class="floating-security" id="floatingSecurity" style="display: none;">
+          <span>🔒</span>
+          <span id="floatingSecurityText"></span>
+        </div>
+        <div class="floating-progress" id="floatingProgress">
+          <div class="floating-progress-track">
+            <div class="floating-progress-fill" id="floatingProgressFill"></div>
+          </div>
+          <span class="floating-progress-label" id="floatingProgressLabel">—</span>
+        </div>
+      </div>
+
+      <!-- Minimized state -->
+      <div class="floating-minimized" id="floatingMinimized" style="display: none;">
+        <span class="floating-mini-icon" id="floatingMiniIcon">🎯</span>
+        <span class="floating-mini-text" id="floatingMiniText">Waiting...</span>
+        <button class="btn-mini" id="btnExpandGuidance" title="Expand">＋</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SCREENSHOT MODE WORKSPACE ===== -->
+  <section class="workspace" id="screenshotModeWorkspace">
+    <div class="workspace-layout">
+      <!-- Screen/Upload Panel -->
+      <div class="screen-panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span class="status-dot" id="ssStatusDot"></span>
+            <span id="ssPanelTitle">Screenshot Upload</span>
+          </div>
+          <div style="display: flex; gap: var(--space-2);">
+            <button class="btn btn-sm btn-ghost" id="btnNewScreenshot" style="display: none;">
+              📸 New Screenshot
+            </button>
+          </div>
+        </div>
+        <div class="screen-view" id="ssScreenView">
+          <!-- Upload zone (shown by default) -->
+          <div class="upload-zone" id="ssUploadZone">
+            <div class="upload-area" id="ssUploadArea">
+              <div class="upload-icon">📸</div>
+              <h3>Upload Screenshot</h3>
+              <p>Drag and drop a screenshot here, or click to browse.<br>You can also paste from clipboard (Ctrl+V).</p>
+              <div class="upload-formats">
+                <span class="format-badge">PNG</span>
+                <span class="format-badge">JPG</span>
+                <span class="format-badge">WebP</span>
+                <span class="format-badge">BMP</span>
+              </div>
+            </div>
+          </div>
+          <!-- Uploaded image display -->
+          <img class="screen-image" id="ssScreenImage" alt="Uploaded screenshot">
+          <!-- Guidance pointer overlay -->
+          <div class="guidance-pointer" id="ssPointer">
+            <div class="pointer-ring"></div>
+          </div>
+          <!-- Analyzing overlay -->
+          <div class="analyzing-overlay" id="ssAnalyzing">
+            <div class="analyzing-content">
+              <div class="analyzing-spinner"></div>
+              <div class="analyzing-text">Analyzing your screenshot...</div>
+            </div>
+          </div>
+        </div>
+        <div class="workspace-actions" id="ssActions" style="display: none;">
+          <button class="btn btn-primary" id="btnReanalyze" style="flex: 1;">
+            <span>🔍</span>
+            <span>Analyze Again</span>
+          </button>
+          <button class="btn btn-ghost" id="btnClearScreenshot">
+            <span>🗑️</span>
+            <span>Clear</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Guidance Panel -->
+      <div class="guidance-panel">
+        <div class="card-glass guidance-card" id="ssGuidanceCard">
+          <div class="empty-guidance">
+            <div class="empty-icon">🎯</div>
+            <p>Upload a screenshot to receive step-by-step guidance.</p>
+          </div>
+        </div>
+        <div class="card-glass step-progress" id="ssProgressCard">
+          <div class="progress-header">
+            <span class="heading-3" style="font-size: var(--text-sm);">Progress</span>
+            <span class="caption">—</span>
+          </div>
+          <div class="progress-bar-track">
+            <div class="progress-bar-fill"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SETTINGS MODAL ===== -->
+  <div class="modal-overlay" id="settingsModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>⚙️ Settings</h2>
+        <button class="modal-close" id="btnCloseSettings">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="settings-group">
+          <label class="settings-label" for="apiKeyInput">Gemini API Key</label>
+          <input type="password" class="settings-input" id="apiKeyInput" 
+                 placeholder="Enter your Google Gemini API key" 
+                 autocomplete="off">
+          <p class="settings-hint">
+            Get a free API key from <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">Google AI Studio</a>. 
+            Your key is stored locally and never shared.
+          </p>
+        </div>
+        <div class="settings-group">
+          <label class="settings-label">Privacy</label>
+          <div class="consent-item" style="margin-top: var(--space-2);">
+            <span class="consent-icon">🛡️</span>
+            <div>
+              <h4>Data Handling</h4>
+              <p>Screenshots and screen captures are processed in real-time via the Gemini API. No images are permanently stored on any server. Your API key is saved only in your browser's local storage.</p>
+            </div>
+          </div>
+        </div>
+        <div class="settings-group">
+          <label class="settings-label">About</label>
+          <p class="caption">Civora AI v1.0.0 — MVP<br>Visual AI assistant for government services.</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="btnCancelSettings">Cancel</button>
+        <button class="btn btn-primary" id="btnSaveSettings">Save Settings</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CONSENT MODAL ===== -->
+  <div class="modal-overlay" id="consentModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>🔒 Screen Access</h2>
+        <button class="modal-close" id="btnCloseConsent">✕</button>
+      </div>
+      <div class="modal-body" id="consentModalBody">
+        <!-- Filled dynamically by PrivacyConsent module -->
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="btnDenyConsent">Not Now</button>
+        <button class="btn btn-primary" id="btnGrantConsent">
+          <span>✓</span>
+          <span>I Understand, Continue</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TOAST CONTAINER ===== -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Hidden file input for screenshot upload -->
+  <input type="file" id="fileInput" accept="image/*" style="display: none;">
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
