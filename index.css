@@ -61,9 +61,9 @@
   --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5);
   --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
 
-  /* Transitions */
-  --transition-fast: 0.15s ease;
-  --transition-base: 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+  /* Performance Optimized Transitions (Ultra-fast & lightweight) */
+  --transition-fast: 0.1s ease;
+  --transition-base: 0.15s ease;
 }
 
 /* Base Reset */
@@ -91,20 +91,6 @@ body {
   overflow-x: hidden;
 }
 
-/* Subtle background illumination (non-intrusive) */
-body::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100vw;
-  height: 450px;
-  background: radial-gradient(ellipse at 50% 0%, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 0;
-}
-
 /* Typography Utilities */
 h1, h2, h3, h4 {
   font-weight: 700;
@@ -119,16 +105,15 @@ h1, h2, h3, h4 {
   -webkit-text-fill-color: transparent;
 }
 
-/* ===== APP HEADER ===== */
+/* ===== APP HEADER (Optimized 60fps GPU rendering) ===== */
 .app-header {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(9, 10, 15, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: #090A0F;
   border-bottom: 1px solid var(--border-subtle);
   padding: var(--space-3) var(--space-6);
+  transform: translateZ(0);
 }
 
 .header-inner {
