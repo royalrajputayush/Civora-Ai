@@ -1,16 +1,15 @@
 /**
  * Civora AI — Guidance Display Module
- * Renders visual guidance instructions, step progress, and "Tap Here" indicators.
+ * Renders concise, action-focused guidance instructions ("Here is what you need to do right now"),
+ * step progress, and visual "Tap Here" pointer overlay on screenshots.
  */
 
 export class GuidanceDisplay {
   constructor() {
     this.guidanceCard = null;
     this.progressCard = null;
-    this.historyCard = null;
     this.pointerElement = null;
     this.currentGuidance = null;
-    this.history = [];
   }
 
   /**
@@ -32,130 +31,95 @@ export class GuidanceDisplay {
 
     this.currentGuidance = analysis;
 
-    // Add to history if different from last
-    if (this.history.length === 0 || 
-        this.history[this.history.length - 1].nextAction?.instruction !== analysis.nextAction?.instruction) {
-      this.history.push({
-        ...analysis,
-        timestamp: Date.now()
-      });
-    }
+    // Render concise action guidance card
+    this.renderGuidanceCard(analysis, progress);
 
-    // Render guidance card
-    this.renderGuidanceCard(analysis);
-    
-    // Render progress
-    if (progress) {
-      this.renderProgressCard(progress, analysis);
-    }
-
-    // Show pointer on screen
+    // Position visual pointer on uploaded image
     if (analysis.nextAction?.targetLocation) {
       this.showPointer(analysis.nextAction.targetLocation);
     }
   }
 
   /**
-   * Render the main guidance instruction card
+   * Render the main guidance instruction card: "Here is what you need to do right now."
    */
-  renderGuidanceCard(analysis) {
+  renderGuidanceCard(analysis, progress) {
     const action = analysis.nextAction;
     if (!action) {
-      this.guidanceCard.innerHTML = `
-        <div class="empty-guidance">
-          <div class="empty-icon">🤔</div>
-          <p>Analyzing the screen...</p>
-        </div>
-      `;
+      this.showEmpty('Could not detect a clear action. Try uploading a clearer screenshot.');
       return;
     }
 
+    const actionIcons = {
+      'tap': '👆',
+      'type': '⌨️',
+      'select': '☑️',
+      'upload': '📎',
+      'scroll': '📜',
+      'wait': '⏳'
+    };
+
+    const actionIcon = actionIcons[action.actionType] || (analysis.isSecurityBoundary ? '🔒' : '👆');
+
     const securityHtml = analysis.isSecurityBoundary ? `
-      <div class="security-notice" style="margin-top: var(--space-4);">
+      <div class="tip-box-v1" style="background: rgba(245, 158, 11, 0.1); border-left: 3px solid #F59E0B; margin-top: 12px;">
         <span>🔒</span>
-        <div>
-          <strong>Security Step</strong><br>
-          ${analysis.securityNote || 'This step requires your manual input for security. Civora cannot and will not bypass this.'}
-        </div>
+        <span>${analysis.securityNote || 'This is a security field (CAPTCHA/OTP). Please type it manually on the portal.'}</span>
       </div>
     ` : '';
 
-    const actionIcon = this.getActionIcon(action.actionType);
-    const confidenceColor = analysis.confidence >= 0.8 ? 'var(--success)' : 
-                            analysis.confidence >= 0.5 ? 'var(--warning)' : 'var(--error)';
-
     this.guidanceCard.innerHTML = `
-      <div class="guidance-step-indicator">
-        <div class="step-number">${analysis.stepNumber || '?'}</div>
-        <div class="step-label">${analysis.screenTitle || 'Current Screen'}</div>
+      <div class="action-card-header">
+        <span class="action-tag">ACTION DETECTED</span>
+        <span class="step-time">Step ${analysis.stepNumber || 1} of ${analysis.totalStepsEstimate || 5}</span>
       </div>
-      
-      <div class="guidance-instruction">
-        <span class="instruction-icon">${actionIcon}</span>
-        <div>
-          <div class="instruction-text">${action.instruction}</div>
-          <div class="instruction-detail">
-            Target: <strong>${action.targetElement}</strong>
-            ${action.targetLocation?.description ? `<br>Location: ${action.targetLocation.description}` : ''}
-          </div>
+
+      <h3 class="action-title">${analysis.screenTitle || 'Portal Screen Detected'}</h3>
+      <p class="action-desc">
+        ${analysis.serviceIdentified ? `Service: <strong>${analysis.serviceIdentified}</strong>` : 'Here is your immediate next step:'}
+      </p>
+
+      <!-- Main Action Callout -->
+      <div class="instruction-box-v1" style="margin-bottom: 14px;">
+        <div class="instruction-icon-v1">${actionIcon}</div>
+        <div class="instruction-body">
+          <span class="instruction-caption">Do this right now:</span>
+          <div class="instruction-text-v1">${action.instruction || `Click on "${action.targetElement}"`}</div>
+          ${action.targetLocation?.description ? `
+            <div style="font-size: 0.78rem; color: var(--text-secondary); margin-top: 4px;">
+              📍 Location: <strong>${action.targetLocation.description}</strong>
+            </div>
+          ` : ''}
         </div>
       </div>
-      
+
+      <!-- Helpful Tip -->
       ${analysis.tip ? `
-        <div class="guidance-tip">
+        <div class="tip-box-v1" style="margin-bottom: 16px;">
           <span class="tip-icon">💡</span>
           <span>${analysis.tip}</span>
         </div>
       ` : ''}
-      
+
       ${securityHtml}
-      
-      <div style="display: flex; align-items: center; gap: var(--space-2); margin-top: var(--space-4);">
-        <span style="font-size: var(--text-xs); color: var(--text-tertiary);">Confidence:</span>
-        <div style="flex: 1; height: 3px; background: var(--surface-2); border-radius: var(--radius-full); overflow: hidden;">
-          <div style="height: 100%; width: ${(analysis.confidence || 0) * 100}%; background: ${confidenceColor}; border-radius: var(--radius-full); transition: width 0.3s;"></div>
-        </div>
-        <span style="font-size: var(--text-xs); color: ${confidenceColor}; font-weight: 600;">${Math.round((analysis.confidence || 0) * 100)}%</span>
+
+      <!-- Next Step Action Buttons -->
+      <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 16px;">
+        <a href="https://myaadhaar.uidai.gov.in" target="_blank" rel="noopener" class="btn btn-primary btn-block">
+          <span>Open Portal & Do This Step</span>
+          <span>↗</span>
+        </a>
+        <button class="btn btn-secondary btn-block" id="btnUploadNextScreenshot">
+          <span>📸</span>
+          <span>Upload Next Screen / Step</span>
+        </button>
       </div>
     `;
-  }
 
-  /**
-   * Render the step progress card
-   */
-  renderProgressCard(progress, analysis) {
-    if (!this.progressCard) return;
-
-    const stepsHtml = analysis?.steps || [];
-    const workflowSteps = progress.steps || [];
-
-    this.progressCard.innerHTML = `
-      <div class="progress-header">
-        <span class="heading-3" style="font-size: var(--text-sm);">Progress</span>
-        <span class="caption">${progress.current} of ${progress.total}</span>
-      </div>
-      
-      <div class="progress-bar-track">
-        <div class="progress-bar-fill" style="width: ${progress.percentage}%;"></div>
-      </div>
-      
-      ${workflowSteps.length > 0 ? `
-        <ul class="step-list">
-          ${workflowSteps.map(step => `
-            <li class="step-item ${step.status}">
-              <span class="step-check">
-                ${step.status === 'completed' ? '✓' : step.status === 'current' ? '→' : ''}
-              </span>
-              <span>${step.name}</span>
-            </li>
-          `).join('')}
-        </ul>
-      ` : `
-        <p class="caption" style="text-align: center; padding: var(--space-4);">
-          ${progress.total > 0 ? `Step ${progress.current} of ${progress.total}` : 'Analyzing workflow...'}
-        </p>
-      `}
-    `;
+    // Bind "Upload Next Screen" button inside the card
+    document.getElementById('btnUploadNextScreenshot')?.addEventListener('click', () => {
+      document.getElementById('fileInput')?.click();
+    });
   }
 
   /**
@@ -165,12 +129,12 @@ export class GuidanceDisplay {
   showPointer(location) {
     if (!this.pointerElement) return;
 
-    const x = location.approximateX || 50;
-    const y = location.approximateY || 50;
+    const x = Math.max(5, Math.min(95, location.approximateX || 50));
+    const y = Math.max(5, Math.min(95, location.approximateY || 50));
 
     this.pointerElement.style.left = `${x}%`;
     this.pointerElement.style.top = `${y}%`;
-    this.pointerElement.style.transform = 'translate(-50%, -50%)';
+    this.pointerElement.style.display = 'block';
     this.pointerElement.classList.add('visible');
   }
 
@@ -179,6 +143,7 @@ export class GuidanceDisplay {
    */
   hidePointer() {
     if (this.pointerElement) {
+      this.pointerElement.style.display = 'none';
       this.pointerElement.classList.remove('visible');
     }
   }
@@ -186,15 +151,17 @@ export class GuidanceDisplay {
   /**
    * Show empty state
    */
-  showEmpty(message = 'Upload a screenshot or start live capture to get guidance.') {
+  showEmpty(message = 'Upload or paste a screenshot from the portal to receive instant directions.') {
     if (this.guidanceCard) {
       this.guidanceCard.innerHTML = `
         <div class="empty-guidance">
-          <div class="empty-icon">🎯</div>
+          <div class="empty-icon-v1">🎯</div>
+          <h4>Waiting for screenshot</h4>
           <p>${message}</p>
         </div>
       `;
     }
+    this.hidePointer();
   }
 
   /**
@@ -204,11 +171,13 @@ export class GuidanceDisplay {
     if (this.guidanceCard) {
       this.guidanceCard.innerHTML = `
         <div class="empty-guidance">
-          <div class="analyzing-spinner"></div>
-          <p class="analyzing-text">Analyzing your screen...</p>
+          <div class="spinner-clean"></div>
+          <h4>Analyzing your screen</h4>
+          <p>Gemini AI is identifying your current step and next action...</p>
         </div>
       `;
     }
+    this.hidePointer();
   }
 
   /**
@@ -218,54 +187,15 @@ export class GuidanceDisplay {
     if (this.guidanceCard) {
       this.guidanceCard.innerHTML = `
         <div class="empty-guidance">
-          <div class="empty-icon">⚠️</div>
-          <p style="color: var(--error);">${message}</p>
+          <div class="empty-icon-v1">⚠️</div>
+          <h4 style="color: var(--danger);">Analysis Notice</h4>
+          <p style="margin-bottom: 16px;">${message || 'Could not analyze the screenshot. Please make sure the portal screen is visible and clear.'}</p>
+          <button class="btn btn-secondary btn-sm" onclick="document.getElementById('fileInput').click()">
+            Upload Another Screenshot
+          </button>
         </div>
       `;
     }
-  }
-
-  /**
-   * Show completion state
-   */
-  showComplete() {
-    if (this.guidanceCard) {
-      this.guidanceCard.innerHTML = `
-        <div class="empty-guidance" style="padding: var(--space-6);">
-          <div class="empty-icon" style="font-size: 4rem; opacity: 1;">🎉</div>
-          <h3 style="margin: var(--space-3) 0;">Process Complete!</h3>
-          <p>You've successfully completed all the steps. Great job!</p>
-        </div>
-      `;
-    }
-  }
-
-  /**
-   * Get the appropriate action icon
-   */
-  getActionIcon(actionType) {
-    const icons = {
-      'tap': '👆',
-      'type': '⌨️',
-      'select': '☑️',
-      'scroll': '📜',
-      'upload': '📎',
-      'wait': '⏳'
-    };
-    return icons[actionType] || '👆';
-  }
-
-  /**
-   * Get guidance history
-   */
-  getHistory() {
-    return this.history;
-  }
-
-  /**
-   * Clear history
-   */
-  clearHistory() {
-    this.history = [];
+    this.hidePointer();
   }
 }

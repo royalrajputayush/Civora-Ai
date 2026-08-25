@@ -289,14 +289,18 @@
                 <div class="upload-icon-v1">📸</div>
                 <h3>Drop your screenshot here</h3>
                 <p>Drag and drop an image, or click to browse.<br>You can also press <kbd>Ctrl+V</kbd> to paste directly.</p>
-                <button class="btn btn-secondary btn-sm" style="margin-top: var(--space-3);">
-                  Select File from Computer
-                </button>
+            <!-- Uploaded preview -->
+            <div class="screen-preview-container" style="position: relative; width: 100%; display: flex; align-items: center; justify-content: center;">
+              <img class="screen-image" id="ssScreenImage" alt="Uploaded screenshot">
+              
+              <!-- Guidance Pointer Overlay -->
+              <div class="guidance-pointer" id="ssPointer" style="position: absolute; display: none; z-index: 10; pointer-events: none;">
+                <div class="pointer-ring"></div>
+                <div class="pointer-badge" style="position: absolute; top: -24px; left: 50%; transform: translateX(-50%); background: #6366F1; color: white; padding: 2px 8px; border-radius: 999px; font-size: 0.7rem; font-weight: 800; white-space: nowrap; box-shadow: 0 2px 8px rgba(0,0,0,0.3);">
+                  👆 Do This
+                </div>
               </div>
             </div>
-
-            <!-- Uploaded preview -->
-            <img class="screen-image" id="ssScreenImage" alt="Uploaded screenshot">
 
             <!-- Analyzing overlay -->
             <div class="analyzing-overlay" id="ssAnalyzing">
