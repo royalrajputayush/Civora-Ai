@@ -1,0 +1,36 @@
+{
+  "manifest_version": 3,
+  "name": "Civora AI — Auto-Pilot Browser Agent",
+  "version": "2.0.0",
+  "description": "Autonomous AI assistant that navigates government portals, fills forms, and completes services for you.",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage",
+    "tabs"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "scripts/background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "css": ["scripts/hud.css"],
+      "js": ["scripts/content.js"],
+      "run_at": "document_end"
+    }
+  ],
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "Civora AI Auto-Pilot"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["scripts/hud.css", "data/workflows.json"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

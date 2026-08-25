@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Civora AI Auto-Pilot</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <!-- Header -->
+    <header class="popup-header">
+      <div class="logo">
+        <span class="logo-icon">🎯</span>
+        <span class="logo-text">Civora</span>
+        <span class="logo-badge">Auto-Pilot</span>
+      </div>
+      <button class="settings-btn" id="btnSettingsToggle" title="Settings">⚙️</button>
+    </header>
+
+    <!-- Main Content -->
+    <div class="popup-body" id="mainView">
+      <div class="hero-card">
+        <h3>Autonomous Web Agent</h3>
+        <p>Select a government service or task. Civora will navigate and complete it automatically for you.</p>
+      </div>
+
+      <!-- Service Selection -->
+      <div class="section-label">Select Service</div>
+      <div class="services-list" id="servicesList">
+        <div class="service-option active" data-id="aadhaar">
+          <div class="service-icon">🪪</div>
+          <div class="service-info">
+            <div class="service-title">Aadhaar Services</div>
+            <div class="service-subtitle">Address, Mobile, Download & Status</div>
+          </div>
+        </div>
+        <div class="service-option" data-id="pan">
+          <div class="service-icon">💳</div>
+          <div class="service-info">
+            <div class="service-title">PAN Services</div>
+            <div class="service-subtitle">Apply Instant e-PAN & Updates</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Auto-Pilot Trigger -->
+      <div class="action-section">
+        <button class="btn btn-primary" id="btnStartAutoPilot">
+          <span>🚀</span>
+          <span>Start Auto-Pilot on Tab</span>
+        </button>
+      </div>
+
+      <!-- Safety Notice -->
+      <div class="safety-pill">
+        <span>🛡️</span>
+        <span>Safe Human-in-the-Loop for OTPs & Passwords</span>
+      </div>
+    </div>
+
+    <!-- Settings View (Hidden by default) -->
+    <div class="popup-body" id="settingsView" style="display: none;">
+      <div class="section-label">Gemini API Key</div>
+      <input type="password" id="apiKeyInput" class="popup-input" placeholder="AIzaSy...">
+      <p class="hint-text">Your API key is stored locally in Chrome storage.</p>
+      <button class="btn btn-primary" id="btnSaveSettings" style="margin-top: 12px; width: 100%;">Save Key</button>
+      <button class="btn btn-ghost" id="btnBackToMain" style="margin-top: 8px; width: 100%;">Back</button>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

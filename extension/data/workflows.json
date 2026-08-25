@@ -1,0 +1,71 @@
+{
+  "aadhaar": {
+    "id": "aadhaar-services",
+    "name": "Aadhaar Online Services",
+    "description": "Navigate UIDAI Aadhaar portal for common services like address update, mobile update, and download.",
+    "service_url": "https://myaadhaar.uidai.gov.in",
+    "subWorkflows": [
+      {
+        "id": "update-address",
+        "name": "Update Address Online",
+        "icon": "📍",
+        "keywords": ["address", "change address", "update address", "house", "relocate"],
+        "steps": [
+          { "target": "Login / My Aadhaar", "action": "click", "instruction": "Click on Login to enter the Aadhaar portal" },
+          { "target": "Aadhaar Number Input", "action": "type", "instruction": "Enter your 12-digit Aadhaar Number" },
+          { "target": "CAPTCHA / OTP", "action": "pause", "instruction": "Please solve the CAPTCHA and enter your SMS OTP", "securityBoundary": true },
+          { "target": "Address Update", "action": "click", "instruction": "Click on Address Update service card" },
+          { "target": "Update Address Online", "action": "click", "instruction": "Select 'Update Address Online' and proceed" },
+          { "target": "Address Form", "action": "fill", "instruction": "Fill in new address details" },
+          { "target": "Upload Proof of Address", "action": "pause", "instruction": "Select and upload your address proof document", "securityBoundary": true },
+          { "target": "Payment / Submit", "action": "click", "instruction": "Review details and confirm submission" }
+        ]
+      },
+      {
+        "id": "download-aadhaar",
+        "name": "Download e-Aadhaar",
+        "icon": "📥",
+        "keywords": ["download", "get aadhaar", "pdf", "card"],
+        "steps": [
+          { "target": "Download Aadhaar card", "action": "click", "instruction": "Click on Download Aadhaar service" },
+          { "target": "Aadhaar Number Input", "action": "type", "instruction": "Enter your 12-digit Aadhaar number" },
+          { "target": "CAPTCHA / OTP", "action": "pause", "instruction": "Please enter CAPTCHA and verify with OTP", "securityBoundary": true },
+          { "target": "Download PDF", "action": "click", "instruction": "Click Download to save your password-protected e-Aadhaar PDF" }
+        ]
+      },
+      {
+        "id": "check-status",
+        "name": "Check Update Status",
+        "icon": "🔍",
+        "keywords": ["status", "track", "urn", "surn", "check"],
+        "steps": [
+          { "target": "Check Enrolment & Update Status", "action": "click", "instruction": "Click on Check Status" },
+          { "target": "URN / SRN Input", "action": "type", "instruction": "Enter your Update Request Number (URN/SRN)" },
+          { "target": "CAPTCHA", "action": "pause", "instruction": "Enter CAPTCHA security code", "securityBoundary": true },
+          { "target": "Submit", "action": "click", "instruction": "Click Submit to view current status" }
+        ]
+      }
+    ]
+  },
+  "pan": {
+    "id": "pan-services",
+    "name": "PAN Card Services (NSDL/UTIITSL)",
+    "description": "Apply for new PAN, instant e-PAN, or update PAN details.",
+    "service_url": "https://www.onlineservices.nsdl.com/paam/endUserRegisterContact.html",
+    "subWorkflows": [
+      {
+        "id": "new-pan",
+        "name": "Apply for Instant e-PAN",
+        "icon": "🪪",
+        "keywords": ["new pan", "instant pan", "apply pan"],
+        "steps": [
+          { "target": "Get New e-PAN", "action": "click", "instruction": "Click on 'Get New e-PAN'" },
+          { "target": "Aadhaar Number", "action": "type", "instruction": "Enter your 12-digit Aadhaar number" },
+          { "target": "OTP Validation", "action": "pause", "instruction": "Enter OTP received from UIDAI", "securityBoundary": true },
+          { "target": "Validate Aadhaar Details", "action": "click", "instruction": "Confirm personal details" },
+          { "target": "Submit", "action": "click", "instruction": "Submit application to receive digital PAN" }
+        ]
+      }
+    ]
+  }
+}
