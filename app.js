@@ -177,13 +177,18 @@ class CivoraApp {
   showView(view) {
     this.currentView = view;
 
-    // Hide all sections
-    document.getElementById('landingSection').style.display = 'none';
-    document.getElementById('modeSelection').classList.remove('active');
-    document.getElementById('serviceSelection').classList.remove('active');
-    document.getElementById('visualModeWorkspace').classList.remove('active');
-    document.getElementById('liveModeWorkspace').classList.remove('active');
-    document.getElementById('screenshotModeWorkspace').classList.remove('active');
+    // Safely hide all sections
+    const landing = document.getElementById('landingSection');
+    const modes = document.getElementById('modeSelection');
+    const visual = document.getElementById('visualModeWorkspace');
+    const live = document.getElementById('liveModeWorkspace');
+    const screenshot = document.getElementById('screenshotModeWorkspace');
+
+    if (landing) landing.style.display = 'none';
+    if (modes) modes.classList.remove('active');
+    if (visual) visual.classList.remove('active');
+    if (live) live.classList.remove('active');
+    if (screenshot) screenshot.classList.remove('active');
 
     // Show/hide back button and privacy badge
     const backBtn = document.getElementById('btnBackToModes');
@@ -191,35 +196,30 @@ class CivoraApp {
 
     switch (view) {
       case 'landing':
-        document.getElementById('landingSection').style.display = '';
-        backBtn.style.display = 'none';
-        privacyBadge.style.display = 'none';
+        if (landing) landing.style.display = '';
+        if (backBtn) backBtn.style.display = 'none';
+        if (privacyBadge) privacyBadge.style.display = 'none';
         break;
       case 'modes':
-        document.getElementById('modeSelection').classList.add('active');
-        backBtn.style.display = 'none';
-        privacyBadge.style.display = 'none';
-        break;
-      case 'services':
-        document.getElementById('serviceSelection').classList.add('active');
-        backBtn.style.display = '';
-        privacyBadge.style.display = 'none';
+        if (modes) modes.classList.add('active');
+        if (backBtn) backBtn.style.display = 'none';
+        if (privacyBadge) privacyBadge.style.display = 'none';
         break;
       case 'visual':
-        document.getElementById('visualModeWorkspace').classList.add('active');
-        backBtn.style.display = '';
-        privacyBadge.style.display = '';
+        if (visual) visual.classList.add('active');
+        if (backBtn) backBtn.style.display = '';
+        if (privacyBadge) privacyBadge.style.display = '';
         break;
       case 'live':
-        document.getElementById('liveModeWorkspace').classList.add('active');
-        backBtn.style.display = '';
-        privacyBadge.style.display = '';
+        if (live) live.classList.add('active');
+        if (backBtn) backBtn.style.display = '';
+        if (privacyBadge) privacyBadge.style.display = '';
         this.initLiveGuidance();
         break;
       case 'screenshot':
-        document.getElementById('screenshotModeWorkspace').classList.add('active');
-        backBtn.style.display = '';
-        privacyBadge.style.display = '';
+        if (screenshot) screenshot.classList.add('active');
+        if (backBtn) backBtn.style.display = '';
+        if (privacyBadge) privacyBadge.style.display = '';
         this.initScreenshotGuidance();
         break;
     }
