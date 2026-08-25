@@ -176,15 +176,19 @@ class CivoraApp {
       if (e.key === 'Enter') launchFromSearch();
     });
 
-    // Quick workflow chips
-    document.querySelectorAll('.service-chip').forEach(chip => {
-      chip.addEventListener('click', () => {
-        const wf = chip.getAttribute('data-workflow');
+    // Quick workflow chips & Service directory cards
+    const bindWorkflowTrigger = (el) => {
+      el.addEventListener('click', () => {
+        const wf = el.getAttribute('data-workflow');
         if (wf) {
-          updateAssistantPlan(wf, chip.textContent.trim());
+          const title = el.querySelector('h4')?.textContent || el.textContent.trim();
+          updateAssistantPlan(wf, title);
         }
       });
-    });
+    };
+
+    document.querySelectorAll('.service-chip').forEach(bindWorkflowTrigger);
+    document.querySelectorAll('.scope-card.active').forEach(bindWorkflowTrigger);
 
     // Method selection buttons inside AI response card
     document.getElementById('btnChooseVisualMethod')?.addEventListener('click', () => {
