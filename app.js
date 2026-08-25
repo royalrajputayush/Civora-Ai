@@ -195,6 +195,10 @@ class CivoraApp {
       this.showView('screenshot');
     });
 
+    document.getElementById('btnChooseLiveMethod')?.addEventListener('click', () => {
+      this.showView('live');
+    });
+
     // Visual mode controls
     document.getElementById('btnVisualNextStep')?.addEventListener('click', () => this.nextVisualStep());
     document.getElementById('btnVisualPrevStep')?.addEventListener('click', () => this.prevVisualStep());

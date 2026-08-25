@@ -95,7 +95,7 @@
           </p>
 
           <div class="guidance-options-grid">
-            <!-- Method 1: Interactive Visual Guide -->
+            <!-- Method 1: Interactive Visual Guide (Primary) -->
             <div class="guidance-method-card primary" id="btnChooseVisualMethod">
               <div class="method-icon">🗺️</div>
               <div class="method-info">
@@ -103,12 +103,12 @@
                   <h4>Interactive Visual Guide</h4>
                   <span class="tag-badge recommended">⭐ 100% Private</span>
                 </div>
-                <p>Follow simulated portal screens with highlighted buttons. No screen sharing required.</p>
+                <p>Follow simulated portal screens with highlighted buttons. No screen sharing or browser permissions required.</p>
                 <div class="method-action-text">Start Visual Guide →</div>
               </div>
             </div>
 
-            <!-- Method 2: Screenshot AI Diagnosis -->
+            <!-- Method 2: Screenshot AI Diagnosis (Primary) -->
             <div class="guidance-method-card" id="btnChooseScreenshotMethod">
               <div class="method-icon">📸</div>
               <div class="method-info">
@@ -116,8 +116,21 @@
                   <h4>Screenshot AI Diagnosis</h4>
                   <span class="tag-badge">⚡ Instant</span>
                 </div>
-                <p>Already on the portal? Drop or paste a screenshot and AI tells you where to click.</p>
+                <p>Already on the portal? Drop or paste a screenshot and AI highlights your exact next action.</p>
                 <div class="method-action-text">Upload Screenshot →</div>
+              </div>
+            </div>
+
+            <!-- Method 3: Live Screen Guidance (Experimental Beta) -->
+            <div class="guidance-method-card" id="btnChooseLiveMethod">
+              <div class="method-icon">🖥️</div>
+              <div class="method-info">
+                <div class="method-title-row">
+                  <h4>Live Screen Guide</h4>
+                  <span class="tag-badge">🧪 Beta</span>
+                </div>
+                <p>Share your screen in real time. (Requires desktop browser screen-sharing permission).</p>
+                <div class="method-action-text">Start Live Screen Share →</div>
               </div>
             </div>
           </div>
@@ -336,13 +349,20 @@
       </div>
     </section>
 
-    <!-- ===== LIVE MODE (POWER USER WORKSPACE) ===== -->
+    <!-- ===== LIVE MODE (EXPERIMENTAL BETA WORKSPACE) ===== -->
     <section class="workspace" id="liveModeWorkspace">
       <div class="workspace-container">
+        
+        <!-- Experimental Beta Notice -->
+        <div class="tip-box-v1" style="background: rgba(99, 102, 241, 0.08); border: 1px solid rgba(99, 102, 241, 0.25); margin-bottom: var(--space-4);">
+          <span>🧪</span>
+          <span><strong>Experimental Beta Feature:</strong> Live screen guidance requires browser screen-sharing permissions. For a 100% private zero-permission experience, we recommend using the <strong>Visual Guide</strong> or <strong>Screenshot Guide</strong>.</span>
+        </div>
+
         <div class="workspace-toolbar">
           <div class="toolbar-left">
             <span class="status-dot active"></span>
-            <h2 class="workspace-title">Live Screen Sharing</h2>
+            <h2 class="workspace-title">Live Screen Sharing (Beta)</h2>
           </div>
           <div class="toolbar-right">
             <button class="btn btn-sm btn-ghost" id="btnAnalyzeNow">🔍 Analyze Frame</button>
@@ -353,9 +373,9 @@
           <canvas class="live-canvas-full" id="liveCanvas"></canvas>
           <div class="live-placeholder-full" id="livePlaceholder">
             <div class="placeholder-content">
-              <div class="placeholder-icon-lg">📱</div>
-              <h2>Share your screen to begin</h2>
-              <p>Civora will track your progress on the government portal in real time.</p>
+              <div class="placeholder-icon-lg">🖥️</div>
+              <h2>Share your screen to begin (Beta)</h2>
+              <p>Civora will analyze your screen in real time. (Requires desktop browser screen-sharing permission).</p>
               <button class="btn btn-primary btn-lg" id="btnStartCapture">
                 <span>Share Screen</span>
               </button>
