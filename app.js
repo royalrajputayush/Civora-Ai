@@ -72,9 +72,6 @@ class CivoraApp {
     // Setup screenshot upload
     this.setupScreenshotUpload();
     
-    // Initialize 3D Visual Effects
-    this.init3DVisuals();
-    
     // Show landing
     this.showView('landing');
 
@@ -104,71 +101,93 @@ class CivoraApp {
   //  Navigation & Views
   // ========================
 
+  selectMode(mode) {
+    this.pendingMode = mode;
+    
+    // Default to address update workflow if none selected
+    if (!this.processKnowledge.getActiveSubWorkflow()) {
+      this.processKnowledge.setActiveSubWorkflow('update-address');
+    }
+
+    this.enterSelectedMode();
+  }
+
   bindEvents() {
-    // Landing
-    document.getElementById('btnGetStarted').addEventListener('click', () => {
-      this.showView('modes');
+    // Logo returns to home/landing
+    document.getElementById('logoHome')?.addEventListener('click', () => {
+      this.showView('landing');
     });
 
-    document.getElementById('btnLearnMore').addEventListener('click', () => {
-      // Smooth scroll to features
-      document.querySelector('.hero-features').scrollIntoView({ behavior: 'smooth' });
-    });
-
-    // Mode selection — go through service picker first
-    document.getElementById('cardVisualMode').addEventListener('click', () => {
+    // Mode launch cards
+    document.getElementById('cardVisualMode')?.addEventListener('click', () => {
       this.selectMode('visual');
     });
 
-    document.getElementById('cardLiveMode').addEventListener('click', () => {
-      this.selectMode('live');
-    });
-
-    document.getElementById('cardScreenshotMode').addEventListener('click', () => {
+    document.getElementById('cardScreenshotMode')?.addEventListener('click', () => {
       this.selectMode('screenshot');
     });
 
-    // Visual mode controls
-    document.getElementById('btnVisualNextStep').addEventListener('click', () => this.nextVisualStep());
-    document.getElementById('btnVisualPrevStep').addEventListener('click', () => this.prevVisualStep());
-    document.getElementById('btnPopoutVisualGuide').addEventListener('click', () => this.openGuidancePopup());
+    document.getElementById('cardVisualModeAlt')?.addEventListener('click', () => {
+      this.selectMode('visual');
+    });
 
-    // Back button — return to mode selection
-    document.getElementById('btnBackToModes').addEventListener('click', () => {
+    document.getElementById('cardScreenshotModeAlt')?.addEventListener('click', () => {
+      this.selectMode('screenshot');
+    });
+
+    // Quick workflow chips
+    document.querySelectorAll('.service-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        const wf = chip.getAttribute('data-workflow');
+        if (wf) {
+          this.processKnowledge.setActiveSubWorkflow(wf);
+          this.startVisualGuideMode();
+          this.showToast(`Starting ${chip.textContent.trim()} guide`, 'info');
+        }
+      });
+    });
+
+    // Visual mode controls
+    document.getElementById('btnVisualNextStep')?.addEventListener('click', () => this.nextVisualStep());
+    document.getElementById('btnVisualPrevStep')?.addEventListener('click', () => this.prevVisualStep());
+    document.getElementById('btnPopoutVisualGuide')?.addEventListener('click', () => this.openGuidancePopup());
+
+    // Back button — return to home
+    document.getElementById('btnBackToModes')?.addEventListener('click', () => {
       if (this.currentView === 'live') {
         this.stopLiveCapture();
       }
-      this.showView('modes');
+      this.showView('landing');
     });
 
     // Settings
-    document.getElementById('btnSettings').addEventListener('click', () => this.openSettings());
-    document.getElementById('btnCloseSettings').addEventListener('click', () => this.closeSettings());
-    document.getElementById('btnCancelSettings').addEventListener('click', () => this.closeSettings());
-    document.getElementById('btnSaveSettings').addEventListener('click', () => this.saveSettings());
+    document.getElementById('btnSettings')?.addEventListener('click', () => this.openSettings());
+    document.getElementById('btnCloseSettings')?.addEventListener('click', () => this.closeSettings());
+    document.getElementById('btnCancelSettings')?.addEventListener('click', () => this.closeSettings());
+    document.getElementById('btnSaveSettings')?.addEventListener('click', () => this.saveSettings());
 
     // Close settings on overlay click
-    document.getElementById('settingsModal').addEventListener('click', (e) => {
+    document.getElementById('settingsModal')?.addEventListener('click', (e) => {
       if (e.target === e.currentTarget) this.closeSettings();
     });
 
     // Consent modal
-    document.getElementById('btnCloseConsent').addEventListener('click', () => this.closeConsent());
-    document.getElementById('btnDenyConsent').addEventListener('click', () => this.closeConsent());
-    document.getElementById('btnGrantConsent').addEventListener('click', () => this.grantConsent());
-    document.getElementById('consentModal').addEventListener('click', (e) => {
+    document.getElementById('btnCloseConsent')?.addEventListener('click', () => this.closeConsent());
+    document.getElementById('btnDenyConsent')?.addEventListener('click', () => this.closeConsent());
+    document.getElementById('btnGrantConsent')?.addEventListener('click', () => this.grantConsent());
+    document.getElementById('consentModal')?.addEventListener('click', (e) => {
       if (e.target === e.currentTarget) this.closeConsent();
     });
 
     // Live mode controls
-    document.getElementById('btnStartCapture').addEventListener('click', () => this.startLiveCapture());
-    document.getElementById('btnStopCapture').addEventListener('click', () => this.stopLiveCapture());
-    document.getElementById('btnAnalyzeNow').addEventListener('click', () => this.analyzeLiveFrame());
+    document.getElementById('btnStartCapture')?.addEventListener('click', () => this.startLiveCapture());
+    document.getElementById('btnStopCapture')?.addEventListener('click', () => this.stopLiveCapture());
+    document.getElementById('btnAnalyzeNow')?.addEventListener('click', () => this.analyzeLiveFrame());
 
     // Screenshot mode controls
-    document.getElementById('btnNewScreenshot').addEventListener('click', () => this.clearScreenshot());
-    document.getElementById('btnReanalyze').addEventListener('click', () => this.analyzeScreenshot());
-    document.getElementById('btnClearScreenshot').addEventListener('click', () => this.clearScreenshot());
+    document.getElementById('btnNewScreenshot')?.addEventListener('click', () => this.clearScreenshot());
+    document.getElementById('btnReanalyze')?.addEventListener('click', () => this.analyzeScreenshot());
+    document.getElementById('btnClearScreenshot')?.addEventListener('click', () => this.clearScreenshot());
 
     // Keyboard shortcuts
     document.addEventListener('keydown', (e) => {
@@ -1319,316 +1338,13 @@ class CivoraApp {
     this.guidanceDisplay.showEmpty('Upload a screenshot to receive step-by-step guidance.');
   }
 
-  // ============================================
-  //  3D Visual Effects & Interactive 3D System
-  // ============================================
-
-  init3DVisuals() {
-    this.initParticleStarfield();
-    this.initQuantumGyroParallax();
-    this.initCursorGlow();
-    this.init3DCardTilt();
-    this.initMagneticButtons();
-    this.initScroll3DReveal();
-  }
-
-  /**
-   * Scroll-Driven Dynamic 3D Reveal Observer
-   */
-  initScroll3DReveal() {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('in-view-3d');
-        }
-      });
-    }, { threshold: 0.15 });
-
-    document.querySelectorAll('.feature-3d-hologram, .journey-step-card, .mode-card').forEach((el) => {
-      observer.observe(el);
-    });
-  }
-
-  /**
-   * Ultra-Deluxe 3D Quantum Gyroscope Physics Parallax
-   */
-  initQuantumGyroParallax() {
-    const rig = document.getElementById('quantumGyroRig');
-    const scene = document.getElementById('hero3dScene');
-    if (!rig || !scene) return;
-
-    let targetRotX = 24;
-    let targetRotY = -20;
-    let currentRotX = targetRotX;
-    let currentRotY = targetRotY;
-
-    window.addEventListener('mousemove', (e) => {
-      const cx = window.innerWidth / 2;
-      const cy = window.innerHeight / 2;
-      const dx = (e.clientX - cx) / cx;
-      const dy = (e.clientY - cy) / cy;
-
-      targetRotX = 24 + dy * -35;
-      targetRotY = -20 + dx * 45;
-    });
-
-    scene.addEventListener('mouseenter', () => {
-      scene.style.transform = 'scale(1.12)';
-      scene.style.transition = 'transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)';
-    });
-
-    scene.addEventListener('mouseleave', () => {
-      scene.style.transform = 'scale(1)';
-      targetRotX = 24;
-      targetRotY = -20;
-    });
-
-    const updateRig = () => {
-      currentRotX += (targetRotX - currentRotX) * 0.08;
-      currentRotY += (targetRotY - currentRotY) * 0.08;
-
-      rig.style.transform = `rotateX(${currentRotX.toFixed(2)}deg) rotateY(${currentRotY.toFixed(2)}deg)`;
-      requestAnimationFrame(updateRig);
-    };
-
-    updateRig();
-  }
-
-  /**
-   * 3D Particle Starfield with Depth (Z-axis) & Scroll-Driven Hyper-Warp Velocity
-   */
-  initParticleStarfield() {
-    const canvas = document.getElementById('particleCanvas');
-    if (!canvas) return;
-
-    const ctx = canvas.getContext('2d');
-    let width = (canvas.width = window.innerWidth);
-    let height = (canvas.height = window.innerHeight);
-
-    window.addEventListener('resize', () => {
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
-    });
-
-    const numParticles = Math.min(120, Math.floor((width * height) / 12000));
-    const particles = [];
-
-    const mouse = {
-      x: width / 2,
-      y: height / 2,
-      targetX: width / 2,
-      targetY: height / 2,
-    };
-
-    let scrollBoost = 0;
-    let lastScrollY = window.scrollY;
-
-    window.addEventListener('scroll', () => {
-      const deltaY = Math.abs(window.scrollY - lastScrollY);
-      scrollBoost = Math.min(12, scrollBoost + deltaY * 0.15);
-      lastScrollY = window.scrollY;
-    }, { passive: true });
-
-    window.addEventListener('mousemove', (e) => {
-      mouse.targetX = e.clientX;
-      mouse.targetY = e.clientY;
-    });
-
-    for (let i = 0; i < numParticles; i++) {
-      particles.push({
-        x: (Math.random() - 0.5) * width * 1.6,
-        y: (Math.random() - 0.5) * height * 1.6,
-        z: Math.random() * 1000 + 1,
-        baseRadius: Math.random() * 2 + 1,
-        color: i % 3 === 0 ? 'rgba(0, 240, 255,' : i % 3 === 1 ? 'rgba(121, 82, 252,' : 'rgba(255, 46, 147,',
-        speedZ: Math.random() * 0.8 + 0.3,
-      });
-    }
-
-    const render = () => {
-      // Decay scroll boost smoothly
-      scrollBoost *= 0.92;
-
-      // Lerp mouse for subtle parallax
-      mouse.x += (mouse.targetX - mouse.x) * 0.05;
-      mouse.y += (mouse.targetY - mouse.y) * 0.05;
-
-      const offsetX = (mouse.x - width / 2) * 0.15;
-      const offsetY = (mouse.y - height / 2) * 0.15;
-
-      ctx.clearRect(0, 0, width, height);
-
-      const fov = 400;
-      const cx = width / 2;
-      const cy = height / 2;
-
-      // Project & update particles
-      const projected = [];
-
-      for (let i = 0; i < particles.length; i++) {
-        const p = particles[i];
-
-        // Move along Z with dynamic scroll velocity boost
-        p.z -= p.speedZ + scrollBoost;
-        if (p.z <= 0) {
-          p.z = 1000;
-          p.x = (Math.random() - 0.5) * width * 1.6;
-          p.y = (Math.random() - 0.5) * height * 1.6;
-        }
-
-        // 3D to 2D projection
-        const scale = fov / (fov + p.z);
-        const projX = (p.x - offsetX) * scale + cx;
-        const projY = (p.y - offsetY) * scale + cy;
-        const radius = Math.max(0.5, p.baseRadius * scale * (1.8 + scrollBoost * 0.1));
-        const alpha = Math.min(1, Math.max(0.1, (1 - p.z / 1000) * 1.2));
-
-        projected.push({ x: projX, y: projY, alpha, radius, color: p.color });
-
-        // Draw particle (draws stretched streak if warping during scroll)
-        ctx.beginPath();
-        if (scrollBoost > 1) {
-          ctx.ellipse(projX, projY, radius, radius * (1 + scrollBoost * 0.6), 0, 0, Math.PI * 2);
-        } else {
-          ctx.arc(projX, projY, radius, 0, Math.PI * 2);
-        }
-        ctx.fillStyle = `${p.color} ${alpha})`;
-        ctx.shadowBlur = radius > 2 ? 12 : 0;
-        ctx.shadowColor = p.color.includes('240') ? '#00f0ff' : '#7952fc';
-        ctx.fill();
-        ctx.shadowBlur = 0;
-      }
-
-      // Draw constellation connections between close nodes
-      for (let i = 0; i < projected.length; i++) {
-        for (let j = i + 1; j < projected.length; j++) {
-          const p1 = projected[i];
-          const p2 = projected[j];
-          const dx = p1.x - p2.x;
-          const dy = p1.y - p2.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-
-          if (dist < 90) {
-            const lineAlpha = (1 - dist / 90) * 0.15 * Math.min(p1.alpha, p2.alpha);
-            ctx.beginPath();
-            ctx.moveTo(p1.x, p1.y);
-            ctx.lineTo(p2.x, p2.y);
-            ctx.strokeStyle = `rgba(121, 82, 252, ${lineAlpha})`;
-            ctx.lineWidth = 0.75;
-            ctx.stroke();
-          }
-        }
-      }
-
-      requestAnimationFrame(render);
-    };
-
-    render();
-  }
-
-  /**
-   * Smooth Cursor Glow Follower
-   */
-  initCursorGlow() {
-    const cursorGlow = document.getElementById('cursorGlow');
-    if (!cursorGlow) return;
-
-    let targetX = window.innerWidth / 2;
-    let targetY = window.innerHeight / 2;
-    let currentX = targetX;
-    let currentY = targetY;
-
-    window.addEventListener('mousemove', (e) => {
-      targetX = e.clientX;
-      targetY = e.clientY;
-      cursorGlow.style.opacity = '1';
-    });
-
-    document.addEventListener('mouseleave', () => {
-      cursorGlow.style.opacity = '0';
-    });
-
-    const updateCursor = () => {
-      currentX += (targetX - currentX) * 0.12;
-      currentY += (targetY - currentY) * 0.12;
-
-      cursorGlow.style.left = `${currentX}px`;
-      cursorGlow.style.top = `${currentY}px`;
-
-      requestAnimationFrame(updateCursor);
-    };
-
-    updateCursor();
-  }
-
-  /**
-   * 3D Interactive Card Tilt with Specular Shimmer
-   */
-  init3DCardTilt() {
-    const addTiltToElement = (el) => {
-      if (el._tiltInitialized) return;
-      el._tiltInitialized = true;
-
-      el.addEventListener('mousemove', (e) => {
-        const rect = el.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-
-        const rotateX = ((y - centerY) / centerY) * -10;
-        const rotateY = ((x - centerX) / centerX) * 10;
-
-        el.style.transform = `perspective(800px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateZ(8px)`;
-        el.style.setProperty('--mouse-x', `${x}px`);
-        el.style.setProperty('--mouse-y', `${y}px`);
-      });
-
-      el.addEventListener('mouseleave', () => {
-        el.style.transform = 'perspective(800px) rotateX(0deg) rotateY(0deg) translateZ(0px)';
-        el.style.transition = 'transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)';
-        setTimeout(() => {
-          el.style.transition = '';
-        }, 400);
-      });
-    };
-
-    // Attach to initial cards
-    document.querySelectorAll('.card, .card-glass, .mode-card, .feature-card').forEach(addTiltToElement);
-
-    // Observer for dynamically added cards
-    const observer = new MutationObserver(() => {
-      document.querySelectorAll('.card, .card-glass, .mode-card, .feature-card, .search-result-card').forEach(addTiltToElement);
-    });
-
-    observer.observe(document.body, { childList: true, subtree: true });
-  }
-
-  /**
-   * 3D Tactile Buttons
-   */
-  initMagneticButtons() {
-    document.querySelectorAll('.btn-primary, .btn-accent').forEach((btn) => {
-      btn.addEventListener('mousemove', (e) => {
-        const rect = btn.getBoundingClientRect();
-        const x = e.clientX - rect.left - rect.width / 2;
-        const y = e.clientY - rect.top - rect.height / 2;
-        btn.style.transform = `translate3d(${x * 0.15}px, ${y * 0.15}px, 0) scale(1.02)`;
-      });
-
-      btn.addEventListener('mouseleave', () => {
-        btn.style.transform = '';
-      });
-    });
-  }
-
   // ========================
   //  Toast Notifications
   // ========================
 
   showToast(message, type = 'info') {
     const container = document.getElementById('toastContainer');
+    if (!container) return;
     
     const icons = {
       success: '✅',
@@ -1646,13 +1362,13 @@ class CivoraApp {
 
     container.appendChild(toast);
 
-    // Auto-remove after 4 seconds
+    // Auto-remove after 3.5 seconds
     setTimeout(() => {
       toast.style.opacity = '0';
-      toast.style.transform = 'translateX(40px)';
-      toast.style.transition = 'all 0.3s ease-out';
-      setTimeout(() => toast.remove(), 300);
-    }, 4000);
+      toast.style.transform = 'translateX(20px)';
+      toast.style.transition = 'all 0.25s ease-out';
+      setTimeout(() => toast.remove(), 250);
+    }, 3500);
   }
 }
 
@@ -1662,3 +1378,4 @@ class CivoraApp {
 document.addEventListener('DOMContentLoaded', () => {
   window.civora = new CivoraApp();
 });
+

@@ -2,576 +2,389 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Civora AI — Visual AI assistant that guides you through government services step-by-step. Live screen guidance and screenshot analysis powered by AI.">
-  <meta name="theme-color" content="#0A0A1A">
-  <meta property="og:title" content="Civora AI — Government Service Guide">
-  <meta property="og:description" content="Navigate government services with AI-powered visual guidance. One step at a time.">
-  <meta property="og:type" content="website">
-  <title>Civora AI — Government Service Guide</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="Civora AI — Modern AI assistant that guides you through government portals step-by-step with interactive visual guides and screenshot analysis.">
+  <meta name="theme-color" content="#0B0D13">
+  <title>Civora AI — Resident Service Navigator</title>
   <link rel="stylesheet" href="index.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 </head>
 <body>
-
-  <!-- ===== 3D PARTICLE CANVAS ===== -->
-  <canvas id="particleCanvas"></canvas>
-
-  <!-- ===== NOISE TEXTURE OVERLAY ===== -->
-  <div class="noise-overlay"></div>
-
-  <!-- ===== FLOATING GLOW ORBS ===== -->
-  <div class="floating-orbs" aria-hidden="true">
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-    <div class="orb orb-3"></div>
-    <div class="orb orb-4"></div>
-  </div>
-
-  <!-- ===== CURSOR GLOW ===== -->
-  <div class="cursor-glow" id="cursorGlow"></div>
 
   <!-- ===== APP HEADER ===== -->
   <header class="app-header" id="appHeader">
     <div class="header-inner">
-      <div class="logo">
+      <div class="logo" id="logoHome" style="cursor: pointer;">
         <div class="logo-icon">🎯</div>
         <span class="logo-text">Civora</span>
         <span class="logo-badge">AI</span>
       </div>
+
       <div class="header-actions">
-        <div class="privacy-badge" id="privacyBadge" style="display: none;">
-          <span>🛡️</span>
-          <span>Privacy-First</span>
+        <div class="privacy-badge" id="privacyBadge">
+          <span class="badge-dot"></span>
+          <span>100% Private</span>
         </div>
         <button class="btn btn-ghost btn-sm" id="btnBackToModes" style="display: none;">
           <span>←</span>
           <span class="btn-label">Back</span>
         </button>
-        <button class="btn btn-ghost btn-icon" id="btnSettings" title="Settings">
+        <button class="btn btn-ghost btn-icon" id="btnSettings" title="API Settings">
           ⚙️
         </button>
       </div>
     </div>
   </header>
 
-  <!-- ===== LANDING SECTION ===== -->
-  <section class="landing-section" id="landingSection">
-    <div class="hero-badge">
-      <span class="dot"></span>
-      <span>Visual AI Assistant for Government Services</span>
-    </div>
-    
-    <!-- Ultra Deluxe 3D Holographic Quantum Gyroscope AI Core -->
-    <div class="hero-3d-quantum-scene" id="hero3dScene" aria-hidden="true">
-      <div class="quantum-gyro-rig" id="quantumGyroRig">
-        <!-- Outer Gyro Ring (Cyan / Neon Blue Yaw) -->
-        <div class="gyro-ring ring-outer">
-          <span class="gyro-node node-top"></span>
-          <span class="gyro-node node-bottom"></span>
-          <span class="gyro-node node-left"></span>
-          <span class="gyro-node node-right"></span>
-        </div>
-        
-        <!-- Mid Gyro Ring (Purple / Violet Pitch) -->
-        <div class="gyro-ring ring-mid">
-          <span class="gyro-node node-1"></span>
-          <span class="gyro-node node-2"></span>
-          <span class="gyro-node node-3"></span>
-          <span class="gyro-node node-4"></span>
-        </div>
-        
-        <!-- Inner Gyro Ring (Emerald Neon Roll) -->
-        <div class="gyro-ring ring-inner">
-          <span class="gyro-node node-a"></span>
-          <span class="gyro-node node-b"></span>
+  <!-- ===== MAIN CONTAINER ===== -->
+  <main class="app-main">
+
+    <!-- ===== LANDING / HOME VIEW ===== -->
+    <section class="landing-section" id="landingSection">
+      <div class="hero-container">
+        <div class="hero-badge">
+          <span class="hero-badge-pill">V1 MVP</span>
+          <span>Resident Portal AI Assistant</span>
         </div>
 
-        <!-- Central Holographic Quantum Nucleus -->
-        <div class="quantum-core">
-          <div class="core-plasma"></div>
-          <div class="core-glass-shell"></div>
-          <div class="core-pulse-ring"></div>
-          <div class="core-lens-flare"></div>
-          <div class="core-emblem">🎯</div>
-        </div>
+        <h1 class="hero-title">
+          Complete portal tasks <br class="desktop-only">without the <span class="gradient-text">confusion</span>
+        </h1>
 
-        <!-- Orbiting Photon Satellites -->
-        <div class="quantum-orbit orbit-alpha">
-          <div class="satellite sat-cyan"></div>
-        </div>
-        <div class="quantum-orbit orbit-beta">
-          <div class="satellite sat-pink"></div>
-        </div>
-      </div>
-      <!-- Ground Reflective Volumetric Glow -->
-      <div class="quantum-ground-glow"></div>
-    </div>
+        <p class="hero-subtitle">
+          Interactive visual walkthroughs and instant screenshot guidance for Aadhaar, PAN, and government identity services. Simple, fast, and 100% private.
+        </p>
 
-    <h1 class="hero-title">
-      Navigate government<br>
-      services with <span class="gradient-text">AI guidance</span>
-    </h1>
-    
-    <p class="hero-subtitle">
-      Civora understands your screen and tells you exactly what to do next. 
-      One simple instruction at a time — like having an expert beside you.
-    </p>
-    
-    <div class="hero-actions">
-      <button class="btn btn-primary btn-lg" id="btnGetStarted">
-        <span>🚀</span>
-        <span>Get Started</span>
-      </button>
-      <button class="btn btn-ghost btn-lg" id="btnLearnMore">
-        <span>📖</span>
-        <span>Explore Features</span>
-      </button>
-    </div>
-    
-    <!-- Ultra Deluxe 3D Interactive Feature Holograms -->
-    <div class="hero-features">
-      <!-- 3D Feature 1: Live AI Scanner -->
-      <div class="card feature-card feature-3d-hologram" data-tilt-depth="25">
-        <div class="hologram-viewport">
-          <div class="holo-screen-mockup">
-            <div class="holo-laser-beam"></div>
-            <div class="holo-target-box">
-              <span class="holo-corner tl"></span>
-              <span class="holo-corner tr"></span>
-              <span class="holo-corner bl"></span>
-              <span class="holo-corner br"></span>
-              <span class="holo-tag">🎯 Update Button</span>
+        <!-- Primary Mode Launch Cards -->
+        <div class="mode-launch-grid">
+          <!-- Mode 1: Visual Walkthrough (Default & Recommended) -->
+          <div class="mode-card-v1 primary-mode" id="cardVisualMode">
+            <div class="mode-card-header">
+              <div class="mode-icon-v1">🗺️</div>
+              <span class="tag-badge recommended">⭐ 100% Private — Zero Permissions</span>
             </div>
-            <div class="holo-hud-metric">AI Confidence: 99.8%</div>
+            <h3>Visual Step-by-Step Guide</h3>
+            <p>
+              See simulated portal screens with highlighted buttons. You perform every action yourself on the official website.
+            </p>
+            <div class="mode-card-features">
+              <span>✓ Visual screen mockups</span>
+              <span>✓ Glowing click targets</span>
+              <span>✓ No screen sharing</span>
+            </div>
+            <button class="btn btn-primary btn-block">
+              <span>Start Visual Guide</span>
+              <span>→</span>
+            </button>
+          </div>
+
+          <!-- Mode 2: Screenshot AI Guide -->
+          <div class="mode-card-v1" id="cardScreenshotMode">
+            <div class="mode-card-header">
+              <div class="mode-icon-v1">📸</div>
+              <span class="tag-badge">⚡ Instant AI Analysis</span>
+            </div>
+            <h3>Screenshot Guidance</h3>
+            <p>
+              Upload or paste a screenshot of where you are stuck. Gemini AI inspects your screen and tells you what to click next.
+            </p>
+            <div class="mode-card-features">
+              <span>✓ Paste from clipboard</span>
+              <span>✓ Instant button detection</span>
+              <span>✓ Error troubleshooting</span>
+            </div>
+            <button class="btn btn-secondary btn-block">
+              <span>Upload Screenshot</span>
+              <span>→</span>
+            </button>
           </div>
         </div>
-        <div class="feature-info">
-          <div class="feature-badge-neon">Real-Time Vision</div>
-          <h3>Live AI Screen Guidance</h3>
-          <p>Watches your screen in real time and highlights the exact button to click with neon radar spotlights.</p>
-        </div>
-      </div>
 
-      <!-- 3D Feature 2: 100% Private Zero-Permissions -->
-      <div class="card feature-card feature-3d-hologram" data-tilt-depth="25">
-        <div class="hologram-viewport">
-          <div class="holo-vault-scene">
-            <div class="vault-ring ring-1"></div>
-            <div class="vault-ring ring-2"></div>
-            <div class="vault-shield-icon">🛡️</div>
-            <div class="vault-lock-glow"></div>
-            <div class="vault-badge">🔒 100% Client-Side</div>
+        <!-- Quick Workflow Chips -->
+        <div class="quick-services-section">
+          <span class="quick-label">Or jump straight to a service:</span>
+          <div class="service-chips-row">
+            <button class="service-chip" data-workflow="update-address">📍 Change Address</button>
+            <button class="service-chip" data-workflow="download-aadhaar">📥 Download e-Aadhaar</button>
+            <button class="service-chip" data-workflow="update-mobile">📱 Update Mobile</button>
+            <button class="service-chip" data-workflow="update-name">✏️ Correct Name</button>
+            <button class="service-chip" data-workflow="check-status">🔍 Check Status</button>
           </div>
         </div>
-        <div class="feature-info">
-          <div class="feature-badge-neon emerald">Zero Risk</div>
-          <h3>Visual Walkthrough Mode</h3>
-          <p>Follow visual portal diagrams without sharing your screen. 100% private with zero browser permissions.</p>
-        </div>
-      </div>
 
-      <!-- 3D Feature 3: Smart Step Navigator -->
-      <div class="card feature-card feature-3d-hologram" data-tilt-depth="25">
-        <div class="hologram-viewport">
-          <div class="holo-nav-scene">
-            <div class="holo-sonar-circle pulse-1"></div>
-            <div class="holo-sonar-circle pulse-2"></div>
-            <div class="holo-pointer-hand">👆</div>
-            <div class="holo-step-pill">Step 2 of 5: Upload Proof</div>
+        <!-- Minimal 3-Step Process Flow -->
+        <div class="simple-steps-banner">
+          <div class="step-item-simple">
+            <span class="step-num-simple">1</span>
+            <div>
+              <strong>Choose Service</strong>
+              <p>Select what you want to do</p>
+            </div>
+          </div>
+          <div class="step-arrow-simple">→</div>
+          <div class="step-item-simple">
+            <span class="step-num-simple">2</span>
+            <div>
+              <strong>Follow Highlights</strong>
+              <p>See exactly where to click</p>
+            </div>
+          </div>
+          <div class="step-arrow-simple">→</div>
+          <div class="step-item-simple">
+            <span class="step-num-simple">3</span>
+            <div>
+              <strong>Done in Minutes</strong>
+              <p>Submit safely on official site</p>
+            </div>
           </div>
         </div>
-        <div class="feature-info">
-          <div class="feature-badge-neon pink">Human in the Loop</div>
-          <h3>OTP & Security Shield</h3>
-          <p>Civora never touches sensitive passwords, OTPs, or CAPTCHAs. You always remain in full control.</p>
-        </div>
       </div>
-    </div>
+    </section>
 
-    <!-- ===== 3D HOW CIVORA WORKS JOURNEY ===== -->
-    <div class="how-it-works-section" id="howItWorksSection">
-      <div class="section-badge-3d">⚡ The 3-Step AI Workflow</div>
-      <h2 class="heading-2" style="font-size: clamp(2rem, 4vw, 2.8rem); margin-bottom: var(--space-4);">
-        How Civora powers your <span class="gradient-text">effortless journey</span>
-      </h2>
-      <p class="body-text" style="max-width: 600px; margin: 0 auto var(--space-12);">
-        From landing on the portal to downloading your official documents — guided every millimeter of the way.
-      </p>
-
-      <div class="journey-3d-grid">
-        <!-- Step 1 Card -->
-        <div class="card-glass journey-step-card" data-step="01">
-          <div class="journey-step-number">01</div>
-          <div class="journey-icon-glow">👁️</div>
-          <h4>Perceives Your Screen</h4>
-          <p>Gemini 3.6 Flash understands government portal layouts, forms, and dialogs instantly.</p>
-          <div class="journey-glow-line"></div>
+    <!-- ===== MODE SELECTION (FALLBACK / ALTERNATIVE VIEW) ===== -->
+    <section class="mode-selection" id="modeSelection">
+      <div class="section-container">
+        <div class="section-header">
+          <h2>Choose Guidance Mode</h2>
+          <p>Select how you want Civora to assist you</p>
         </div>
-
-        <!-- Step 2 Card -->
-        <div class="card-glass journey-step-card" data-step="02">
-          <div class="journey-step-number">02</div>
-          <div class="journey-icon-glow">📍</div>
-          <h4>Highlights Exact Actions</h4>
-          <p>Generates high-precision "Tap Here" pointers directly on the buttons you need to click.</p>
-          <div class="journey-glow-line"></div>
-        </div>
-
-        <!-- Step 3 Card -->
-        <div class="card-glass journey-step-card" data-step="03">
-          <div class="journey-step-number">03</div>
-          <div class="journey-icon-glow">🎉</div>
-          <h4>Guarantees Completion</h4>
-          <p>Verifies success at every stage until your official government update is complete.</p>
-          <div class="journey-glow-line"></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== MODE SELECTION ===== -->
-  <section class="mode-selection" id="modeSelection">
-    <div class="mode-header">
-      <h2 class="heading-2" style="margin-bottom: var(--space-3);">Choose Your Mode</h2>
-      <p class="body-text">How would you like Civora to help you?</p>
-    </div>
-    
-    <div class="mode-cards">
-      <!-- Visual Interactive Guide Card (Primary 100% Private Mode) -->
-      <div class="card mode-card recommended-card" id="cardVisualMode">
-        <div class="mode-icon">🗺️</div>
-        <span class="mode-tag recommended">⭐ 100% Private — Zero Permissions</span>
-        <h3>Visual Step-by-Step Guide</h3>
-        <p>
-          See exact visual screenshots of what to do at each step with glowing tap targets. 
-          You perform actions on your own computer with zero screen sharing.
-        </p>
-        <div style="display: flex; gap: var(--space-2); flex-wrap: wrap; margin-top: var(--space-3);">
-          <span class="mode-tag">🛡️ 100% Private</span>
-          <span class="mode-tag">🖼️ Visual Mockups</span>
-          <span class="mode-tag">👆 Tap-here Highlights</span>
-          <span class="mode-tag">🪟 Popout Window</span>
-        </div>
-      </div>
-
-      <!-- Live Mode Card -->
-      <div class="card mode-card" id="cardLiveMode">
-        <div class="mode-icon">📱</div>
-        <span class="mode-tag">🤖 Live AI Tracking</span>
-        <h3>Live Screen Guidance</h3>
-        <p>
-          Share your screen and Civora will watch what you see in real-time. 
-          It detects each step and guides you with "Tap Here" instructions automatically.
-        </p>
-        <div style="display: flex; gap: var(--space-2); flex-wrap: wrap; margin-top: var(--space-3);">
-          <span class="mode-tag">🔄 Real-time</span>
-          <span class="mode-tag">🔍 Auto-detect changes</span>
-        </div>
-      </div>
-      
-      <!-- Screenshot Mode Card -->
-      <div class="card mode-card" id="cardScreenshotMode">
-        <div class="mode-icon">📸</div>
-        <span class="mode-tag easy">📎 On-Demand</span>
-        <h3>Screenshot Guidance</h3>
-        <p>
-          Take a screenshot of your current screen and upload it. 
-          Civora analyzes the image and tells you exactly what to do next.
-        </p>
-        <div style="display: flex; gap: var(--space-2); flex-wrap: wrap; margin-top: var(--space-3);">
-          <span class="mode-tag">📎 Upload image</span>
-          <span class="mode-tag">📋 Paste from clipboard</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== VISUAL GUIDE WORKSPACE (100% Private, Zero Permissions) ===== -->
-  <section class="workspace visual-workspace" id="visualModeWorkspace">
-    <div class="visual-workspace-layout">
-      <!-- Left: Visual Screen Mockup -->
-      <div class="visual-mockup-panel">
-        <div class="panel-header">
-          <div class="panel-title">
-            <span class="status-dot active"></span>
-            <span id="visualPanelTitle">Visual Step-by-Step Walkthrough</span>
+        <div class="mode-launch-grid">
+          <div class="mode-card-v1 primary-mode" id="cardVisualModeAlt">
+            <div class="mode-card-header">
+              <div class="mode-icon-v1">🗺️</div>
+              <span class="tag-badge recommended">⭐ 100% Private</span>
+            </div>
+            <h3>Visual Step-by-Step Guide</h3>
+            <p>Simulated screens showing exact click locations. 100% private with zero browser permissions.</p>
+            <button class="btn btn-primary btn-block">Start Visual Guide →</button>
           </div>
-          <div style="display: flex; gap: var(--space-2);">
+          <div class="mode-card-v1" id="cardScreenshotModeAlt">
+            <div class="mode-card-header">
+              <div class="mode-icon-v1">📸</div>
+              <span class="tag-badge">⚡ AI Powered</span>
+            </div>
+            <h3>Screenshot Guide</h3>
+            <p>Upload a screenshot and get instant AI directions.</p>
+            <button class="btn btn-secondary btn-block">Upload Screenshot →</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== VISUAL GUIDE WORKSPACE (100% Private, Zero Permissions) ===== -->
+    <section class="workspace visual-workspace" id="visualModeWorkspace">
+      <div class="workspace-container">
+        
+        <!-- Top Toolbar -->
+        <div class="workspace-toolbar">
+          <div class="toolbar-left">
+            <h2 class="workspace-title" id="visualPanelTitle">Aadhaar Address Update</h2>
+            <span class="step-pill" id="visualStepBadge">Step 1 of 5</span>
+          </div>
+          <div class="toolbar-right">
             <a href="https://myaadhaar.uidai.gov.in" target="_blank" rel="noopener" class="btn btn-sm btn-ghost" id="btnOpenOfficialPortal">
               <span>🌐</span>
               <span>Open Portal in New Tab</span>
               <span>↗</span>
             </a>
-            <button class="btn btn-sm btn-ghost" id="btnPopoutVisualGuide" title="Open floating window for side-by-side guidance">
+            <button class="btn btn-sm btn-secondary" id="btnPopoutVisualGuide" title="Open floating side-by-side window">
               <span>🪟</span>
               <span>Floating Popup</span>
             </button>
           </div>
         </div>
 
-        <div class="visual-mockup-body" id="visualMockupContainer">
-          <!-- Populated dynamically by MockupRenderer -->
-        </div>
-      </div>
-
-      <!-- Right: Step Instructions & Controls -->
-      <div class="visual-controls-panel">
-        <div class="card-glass visual-step-card">
-          <div class="step-card-header">
-            <span class="floating-step-badge" id="visualStepBadge">Step 1 of 5</span>
-            <span class="step-time-badge" id="visualTimeBadge">~10 min</span>
-          </div>
-
-          <h3 class="visual-step-title" id="visualStepTitle">Landing on Portal</h3>
-          <p class="visual-step-desc" id="visualStepDesc">Follow the highlighted hotspot on the visual mockup.</p>
-
-          <div class="visual-instruction-box">
-            <div class="instruction-icon" id="visualActionIcon">👆</div>
-            <div class="instruction-text-group">
-              <span class="instruction-label">What to do:</span>
-              <div class="instruction-main-text" id="visualInstructionText">Click on 'Update Address'</div>
+        <!-- Main Workspace Grid -->
+        <div class="visual-grid">
+          <!-- Left: High-Contrast Visual Screen Mockup -->
+          <div class="mockup-container-card">
+            <div class="mockup-header-bar">
+              <span class="browser-dot red"></span>
+              <span class="browser-dot yellow"></span>
+              <span class="browser-dot green"></span>
+              <span class="mockup-url" id="mockupUrlText">myaadhaar.uidai.gov.in</span>
+            </div>
+            <div class="mockup-viewport" id="visualMockupContainer">
+              <!-- Populated dynamically by MockupRenderer -->
             </div>
           </div>
 
-          <div class="visual-tip-box" id="visualTipBox">
-            <span class="tip-icon">💡</span>
-            <span id="visualTipText">Accepted documents include Passport, Electricity bill, or Bank passbook.</span>
-          </div>
+          <!-- Right: Action Card & Step Checklist -->
+          <div class="control-sidebar">
+            <div class="action-card-v1">
+              <div class="action-card-header">
+                <span class="action-tag">ACTION REQUIRED</span>
+                <span class="step-time" id="visualTimeBadge">~5 min</span>
+              </div>
 
-          <!-- Navigation Buttons -->
-          <div class="visual-nav-actions">
-            <button class="btn btn-ghost" id="btnVisualPrevStep" style="flex: 1;">
-              <span>←</span>
-              <span>Previous</span>
-            </button>
-            <button class="btn btn-primary" id="btnVisualNextStep" style="flex: 1.5;">
-              <span>Next Step</span>
-              <span>→</span>
-            </button>
-          </div>
-        </div>
+              <h3 class="action-title" id="visualStepTitle">Landing on Portal</h3>
+              <p class="action-desc" id="visualStepDesc">Follow the highlighted button on the simulated screen.</p>
 
-        <!-- Step List Progress -->
-        <div class="card-glass visual-progress-card">
-          <div class="progress-header">
-            <span class="heading-3" style="font-size: var(--text-sm);">Workflow Steps</span>
-            <span class="caption" id="visualProgressPercent">20%</span>
-          </div>
-          <div class="progress-bar-track">
-            <div class="progress-bar-fill" id="visualProgressFill" style="width: 20%;"></div>
-          </div>
-          <ul class="step-list" id="visualStepList">
-            <!-- Populated dynamically -->
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
+              <div class="instruction-box-v1">
+                <div class="instruction-icon-v1" id="visualActionIcon">👆</div>
+                <div class="instruction-body">
+                  <span class="instruction-caption">What to do on official portal:</span>
+                  <div class="instruction-text-v1" id="visualInstructionText">Click on "Update Address"</div>
+                </div>
+              </div>
 
-  <!-- ===== LIVE MODE WORKSPACE (Full-screen + Floating Card) ===== -->
-  <section class="workspace" id="liveModeWorkspace">
-    <!-- Full-screen capture view -->
-    <div class="live-fullscreen" id="liveFullscreen">
-      <canvas class="live-canvas-full" id="liveCanvas"></canvas>
-      <div class="live-placeholder-full" id="livePlaceholder">
-        <div class="placeholder-content">
-          <div class="placeholder-icon-lg">📱</div>
-          <h2>Start Screen Sharing</h2>
-          <p>Share your screen and Civora will guide you step-by-step through the process.</p>
-          <button class="btn btn-primary btn-lg" id="btnStartCapture">
-            <span>📱</span>
-            <span>Share My Screen</span>
-          </button>
-        </div>
-      </div>
+              <div class="tip-box-v1" id="visualTipBox">
+                <span class="tip-icon">💡</span>
+                <span id="visualTipText">Accepted proof documents include Passport, Electricity bill, or Bank Passbook.</span>
+              </div>
 
-      <!-- Guidance pointer overlay -->
-      <div class="guidance-pointer" id="livePointer">
-        <div class="pointer-ring"></div>
-      </div>
-
-      <!-- Analyzing overlay -->
-      <div class="analyzing-overlay" id="liveAnalyzing">
-        <div class="analyzing-content">
-          <div class="analyzing-spinner"></div>
-          <div class="analyzing-text">Analyzing screen...</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Floating top bar (shown during capture) -->
-    <div class="live-topbar" id="liveTopbar">
-      <div class="topbar-left">
-        <span class="status-dot active" id="liveStatusDot"></span>
-        <span class="topbar-title" id="livePanelTitle">Live — Capturing</span>
-      </div>
-      <div class="topbar-right">
-        <button class="btn btn-sm btn-ghost" id="btnAnalyzeNow">
-          🔍 Analyze Now
-        </button>
-        <button class="btn btn-sm btn-danger" id="btnStopCapture">
-          🛑 Stop
-        </button>
-      </div>
-    </div>
-
-    <!-- Floating Sticky Guidance Card -->
-    <div class="floating-guidance" id="floatingGuidance">
-      <div class="floating-guidance-header" id="floatingGuidanceHeader">
-        <div class="floating-guidance-drag">
-          <span class="drag-dots">⋮⋮</span>
-          <span class="floating-step-badge" id="floatingStepBadge">Step 1</span>
-        </div>
-        <div class="floating-guidance-actions">
-          <button class="btn-mini" id="btnMinimizeGuidance" title="Minimize">—</button>
-        </div>
-      </div>
-
-      <div class="floating-guidance-body" id="floatingGuidanceBody">
-        <div class="floating-instruction" id="floatingInstruction">
-          <div class="floating-instruction-icon" id="floatingActionIcon">🎯</div>
-          <div class="floating-instruction-content">
-            <div class="floating-instruction-text" id="floatingInstructionText">
-              Start screen sharing to receive guidance
+              <!-- Navigation Controls -->
+              <div class="nav-button-row">
+                <button class="btn btn-ghost" id="btnVisualPrevStep" style="flex: 1;">
+                  <span>←</span>
+                  <span>Previous</span>
+                </button>
+                <button class="btn btn-primary" id="btnVisualNextStep" style="flex: 1.5;">
+                  <span>Next Step</span>
+                  <span>→</span>
+                </button>
+              </div>
             </div>
-            <div class="floating-instruction-target" id="floatingInstructionTarget"></div>
+
+            <!-- Steps Checklist -->
+            <div class="steps-progress-card">
+              <div class="progress-bar-container">
+                <div class="progress-bar-track">
+                  <div class="progress-bar-fill" id="visualProgressFill" style="width: 20%;"></div>
+                </div>
+                <span class="progress-percent" id="visualProgressPercent">20%</span>
+              </div>
+              <ul class="steps-checklist" id="visualStepList">
+                <!-- Populated dynamically -->
+              </ul>
+            </div>
           </div>
-        </div>
-        <div class="floating-tip" id="floatingTip" style="display: none;">
-          <span class="tip-icon">💡</span>
-          <span id="floatingTipText"></span>
-        </div>
-        <div class="floating-security" id="floatingSecurity" style="display: none;">
-          <span>🔒</span>
-          <span id="floatingSecurityText"></span>
-        </div>
-        <div class="floating-progress" id="floatingProgress">
-          <div class="floating-progress-track">
-            <div class="floating-progress-fill" id="floatingProgressFill"></div>
-          </div>
-          <span class="floating-progress-label" id="floatingProgressLabel">—</span>
         </div>
       </div>
+    </section>
 
-      <!-- Minimized state -->
-      <div class="floating-minimized" id="floatingMinimized" style="display: none;">
-        <span class="floating-mini-icon" id="floatingMiniIcon">🎯</span>
-        <span class="floating-mini-text" id="floatingMiniText">Waiting...</span>
-        <button class="btn-mini" id="btnExpandGuidance" title="Expand">＋</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== SCREENSHOT MODE WORKSPACE ===== -->
-  <section class="workspace" id="screenshotModeWorkspace">
-    <div class="workspace-layout">
-      <!-- Screen/Upload Panel -->
-      <div class="screen-panel">
-        <div class="panel-header">
-          <div class="panel-title">
-            <span class="status-dot" id="ssStatusDot"></span>
-            <span id="ssPanelTitle">Screenshot Upload</span>
+    <!-- ===== SCREENSHOT MODE WORKSPACE ===== -->
+    <section class="workspace" id="screenshotModeWorkspace">
+      <div class="workspace-container">
+        <div class="workspace-toolbar">
+          <div class="toolbar-left">
+            <h2 class="workspace-title">Screenshot AI Guide</h2>
+            <span class="step-pill">Gemini 3.6 Vision</span>
           </div>
-          <div style="display: flex; gap: var(--space-2);">
+          <div class="toolbar-right">
             <button class="btn btn-sm btn-ghost" id="btnNewScreenshot" style="display: none;">
-              📸 New Screenshot
+              📸 Upload Another
             </button>
           </div>
         </div>
-        <div class="screen-view" id="ssScreenView">
-          <!-- Upload zone (shown by default) -->
-          <div class="upload-zone" id="ssUploadZone">
-            <div class="upload-area" id="ssUploadArea">
-              <div class="upload-icon">📸</div>
-              <h3>Upload Screenshot</h3>
-              <p>Drag and drop a screenshot here, or click to browse.<br>You can also paste from clipboard (Ctrl+V).</p>
-              <div class="upload-formats">
-                <span class="format-badge">PNG</span>
-                <span class="format-badge">JPG</span>
-                <span class="format-badge">WebP</span>
-                <span class="format-badge">BMP</span>
+
+        <div class="screenshot-grid">
+          <!-- Left: Screen / Upload Area -->
+          <div class="screenshot-display-card">
+            <div class="upload-zone" id="ssUploadZone">
+              <div class="upload-area" id="ssUploadArea">
+                <div class="upload-icon-v1">📸</div>
+                <h3>Drop your screenshot here</h3>
+                <p>Drag and drop an image, or click to browse.<br>You can also press <kbd>Ctrl+V</kbd> to paste directly.</p>
+                <button class="btn btn-secondary btn-sm" style="margin-top: var(--space-3);">
+                  Select File from Computer
+                </button>
+              </div>
+            </div>
+
+            <!-- Uploaded preview -->
+            <img class="screen-image" id="ssScreenImage" alt="Uploaded screenshot">
+
+            <!-- Analyzing overlay -->
+            <div class="analyzing-overlay" id="ssAnalyzing">
+              <div class="analyzing-content">
+                <div class="spinner-clean"></div>
+                <div class="analyzing-text">AI is analyzing your screen...</div>
+              </div>
+            </div>
+
+            <div class="screenshot-action-footer" id="ssActions" style="display: none;">
+              <button class="btn btn-primary" id="btnReanalyze">
+                <span>🔍</span>
+                <span>Analyze Again</span>
+              </button>
+              <button class="btn btn-ghost" id="btnClearScreenshot">
+                <span>🗑️</span>
+                <span>Clear Image</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Right: AI Guidance Output -->
+          <div class="control-sidebar">
+            <div class="action-card-v1" id="ssGuidanceCard">
+              <div class="empty-guidance">
+                <div class="empty-icon-v1">🎯</div>
+                <h4>Waiting for screenshot</h4>
+                <p>Upload or paste an image from the portal to receive instant directions.</p>
               </div>
             </div>
           </div>
-          <!-- Uploaded image display -->
-          <img class="screen-image" id="ssScreenImage" alt="Uploaded screenshot">
-          <!-- Guidance pointer overlay -->
-          <div class="guidance-pointer" id="ssPointer">
-            <div class="pointer-ring"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== LIVE MODE (POWER USER WORKSPACE) ===== -->
+    <section class="workspace" id="liveModeWorkspace">
+      <div class="workspace-container">
+        <div class="workspace-toolbar">
+          <div class="toolbar-left">
+            <span class="status-dot active"></span>
+            <h2 class="workspace-title">Live Screen Sharing</h2>
           </div>
-          <!-- Analyzing overlay -->
-          <div class="analyzing-overlay" id="ssAnalyzing">
-            <div class="analyzing-content">
-              <div class="analyzing-spinner"></div>
-              <div class="analyzing-text">Analyzing your screenshot...</div>
+          <div class="toolbar-right">
+            <button class="btn btn-sm btn-ghost" id="btnAnalyzeNow">🔍 Analyze Frame</button>
+            <button class="btn btn-sm btn-danger" id="btnStopCapture">🛑 Stop</button>
+          </div>
+        </div>
+        <div class="live-screen-container">
+          <canvas class="live-canvas-full" id="liveCanvas"></canvas>
+          <div class="live-placeholder-full" id="livePlaceholder">
+            <div class="placeholder-content">
+              <div class="placeholder-icon-lg">📱</div>
+              <h2>Share your screen to begin</h2>
+              <p>Civora will track your progress on the government portal in real time.</p>
+              <button class="btn btn-primary btn-lg" id="btnStartCapture">
+                <span>Share Screen</span>
+              </button>
             </div>
           </div>
         </div>
-        <div class="workspace-actions" id="ssActions" style="display: none;">
-          <button class="btn btn-primary" id="btnReanalyze" style="flex: 1;">
-            <span>🔍</span>
-            <span>Analyze Again</span>
-          </button>
-          <button class="btn btn-ghost" id="btnClearScreenshot">
-            <span>🗑️</span>
-            <span>Clear</span>
-          </button>
-        </div>
       </div>
+    </section>
 
-      <!-- Guidance Panel -->
-      <div class="guidance-panel">
-        <div class="card-glass guidance-card" id="ssGuidanceCard">
-          <div class="empty-guidance">
-            <div class="empty-icon">🎯</div>
-            <p>Upload a screenshot to receive step-by-step guidance.</p>
-          </div>
-        </div>
-        <div class="card-glass step-progress" id="ssProgressCard">
-          <div class="progress-header">
-            <span class="heading-3" style="font-size: var(--text-sm);">Progress</span>
-            <span class="caption">—</span>
-          </div>
-          <div class="progress-bar-track">
-            <div class="progress-bar-fill"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+  </main>
 
   <!-- ===== SETTINGS MODAL ===== -->
   <div class="modal-overlay" id="settingsModal">
-    <div class="modal">
+    <div class="modal-clean">
       <div class="modal-header">
-        <h2>⚙️ Settings</h2>
+        <h3>⚙️ Settings</h3>
         <button class="modal-close" id="btnCloseSettings">✕</button>
       </div>
       <div class="modal-body">
         <div class="settings-group">
           <label class="settings-label" for="apiKeyInput">Gemini API Key</label>
           <input type="password" class="settings-input" id="apiKeyInput" 
-                 placeholder="Enter your Google Gemini API key" 
+                 placeholder="Enter Google Gemini API key" 
                  autocomplete="off">
           <p class="settings-hint">
-            Get a free API key from <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">Google AI Studio</a>. 
-            Your key is stored locally and never shared.
+            Stored locally in your browser. Get a free API key from <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">Google AI Studio</a>.
           </p>
         </div>
         <div class="settings-group">
-          <label class="settings-label">Privacy</label>
-          <div class="consent-item" style="margin-top: var(--space-2);">
-            <span class="consent-icon">🛡️</span>
-            <div>
-              <h4>Data Handling</h4>
-              <p>Screenshots and screen captures are processed in real-time via the Gemini API. No images are permanently stored on any server. Your API key is saved only in your browser's local storage.</p>
-            </div>
-          </div>
-        </div>
-        <div class="settings-group">
-          <label class="settings-label">About</label>
-          <p class="caption">Civora AI v1.0.0 — MVP<br>Visual AI assistant for government services.</p>
+          <label class="settings-label">Privacy & Data Handling</label>
+          <p class="settings-hint">
+            Civora operates on a privacy-first architecture. All visual mockups and guides run 100% client-side with zero data transmission.
+          </p>
         </div>
       </div>
       <div class="modal-footer">
@@ -583,28 +396,23 @@
 
   <!-- ===== CONSENT MODAL ===== -->
   <div class="modal-overlay" id="consentModal">
-    <div class="modal">
+    <div class="modal-clean">
       <div class="modal-header">
-        <h2>🔒 Screen Access</h2>
+        <h3>🔒 Screen Sharing Permission</h3>
         <button class="modal-close" id="btnCloseConsent">✕</button>
       </div>
-      <div class="modal-body" id="consentModalBody">
-        <!-- Filled dynamically by PrivacyConsent module -->
-      </div>
+      <div class="modal-body" id="consentModalBody"></div>
       <div class="modal-footer">
-        <button class="btn btn-ghost" id="btnDenyConsent">Not Now</button>
-        <button class="btn btn-primary" id="btnGrantConsent">
-          <span>✓</span>
-          <span>I Understand, Continue</span>
-        </button>
+        <button class="btn btn-ghost" id="btnDenyConsent">Cancel</button>
+        <button class="btn btn-primary" id="btnGrantConsent">I Understand, Continue</button>
       </div>
     </div>
   </div>
 
-  <!-- ===== TOAST CONTAINER ===== -->
+  <!-- Toast Notification Container -->
   <div class="toast-container" id="toastContainer"></div>
 
-  <!-- Hidden file input for screenshot upload -->
+  <!-- Hidden File Input -->
   <input type="file" id="fileInput" accept="image/*" style="display: none;">
 
   <script type="module" src="app.js"></script>
