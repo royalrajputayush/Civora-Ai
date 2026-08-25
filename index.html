@@ -56,7 +56,7 @@
         </h1>
 
         <p class="assistant-subtitle">
-          Tell Civora which government portal task you need help with. We'll guide you step-by-step so you never get stuck.
+          Show Civora where you're stuck. We'll tell you what to do next.
         </p>
 
         <!-- Intelligent Assistant Prompt Box -->
@@ -64,7 +64,7 @@
           <div class="prompt-input-wrapper">
             <span class="prompt-icon">💬</span>
             <input type="text" id="aiServiceSearchInput" class="ai-search-input" 
-                   placeholder="Type what you need (e.g. Update my address in Aadhaar, download PDF...)"
+                   placeholder="Type what you need (e.g. Update address, download PDF...)"
                    autocomplete="off">
             <button class="btn btn-primary" id="btnLaunchSearchGuide">
               <span>Ask AI</span>
@@ -74,7 +74,7 @@
 
           <!-- Quick Service Suggestion Chips -->
           <div class="prompt-quick-chips">
-            <span class="chips-label">Or choose a task:</span>
+            <span class="chips-label">Popular tasks:</span>
             <button class="service-chip" data-workflow="update-address">📍 Update Address</button>
             <button class="service-chip" data-workflow="download-aadhaar">📥 Download e-Aadhaar</button>
             <button class="service-chip" data-workflow="update-mobile">📱 Link Mobile</button>
@@ -86,42 +86,42 @@
         <!-- AI Guidance Method Selection (Conversational response card) -->
         <div class="ai-assistant-response" id="aiAssistantResponse">
           <div class="response-header">
-            <span class="response-ai-tag">✨ CIVORA AI GUIDANCE PLAN</span>
+            <span class="response-ai-tag">✨ CIVORA GUIDANCE PLAN</span>
             <span class="response-service-name" id="responseServiceName">Aadhaar Address Update</span>
           </div>
 
           <p class="response-text" id="responseServiceDesc">
-            I can guide you through this process on the official portal in about 5 minutes. How would you like me to guide you?
+            I can guide you through this on the official portal in about 5 minutes. Choose how you'd like to be guided:
           </p>
 
           <div class="guidance-options-grid">
-            <!-- Method 1: Interactive Visual Guide (Primary) -->
+            <!-- Method 1: Visual Guide (Primary) -->
             <div class="guidance-method-card primary" id="btnChooseVisualMethod">
               <div class="method-icon">🗺️</div>
               <div class="method-info">
                 <div class="method-title-row">
-                  <h4>Interactive Visual Guide</h4>
+                  <h4>Visual Guide</h4>
                   <span class="tag-badge recommended">⭐ 100% Private</span>
                 </div>
-                <p>Follow simulated portal screens with highlighted buttons. No screen sharing or browser permissions required.</p>
+                <p>Follow simulated portal screens with highlighted buttons. No screen sharing required.</p>
                 <div class="method-action-text">Start Visual Guide →</div>
               </div>
             </div>
 
-            <!-- Method 2: Screenshot AI Diagnosis (Primary) -->
+            <!-- Method 2: Screenshot Guide (Primary) -->
             <div class="guidance-method-card" id="btnChooseScreenshotMethod">
               <div class="method-icon">📸</div>
               <div class="method-info">
                 <div class="method-title-row">
-                  <h4>Screenshot AI Diagnosis</h4>
+                  <h4>Screenshot Guide</h4>
                   <span class="tag-badge">⚡ Instant</span>
                 </div>
-                <p>Already on the portal? Drop or paste a screenshot and AI highlights your exact next action.</p>
-                <div class="method-action-text">Upload Screenshot →</div>
+                <p>Already on the portal? Drop or paste a screenshot and Civora highlights your next action.</p>
+                <div class="method-action-text">Start Screenshot Guide →</div>
               </div>
             </div>
 
-            <!-- Method 3: Live Screen Guidance (Experimental Beta) -->
+            <!-- Method 3: Live Screen Guide (Experimental Beta) -->
             <div class="guidance-method-card" id="btnChooseLiveMethod">
               <div class="method-icon">🖥️</div>
               <div class="method-info">
@@ -351,7 +351,7 @@
       <div class="workspace-container">
         <div class="workspace-toolbar">
           <div class="toolbar-left">
-            <h2 class="workspace-title">Screenshot AI Guide</h2>
+            <h2 class="workspace-title">Screenshot Guide</h2>
             <span class="step-pill">Gemini 3.6 Vision</span>
           </div>
           <div class="toolbar-right">
@@ -429,7 +429,7 @@
         <div class="workspace-toolbar">
           <div class="toolbar-left">
             <span class="status-dot active"></span>
-            <h2 class="workspace-title">Live Screen Sharing (Beta)</h2>
+            <h2 class="workspace-title">Live Screen Guide (Beta)</h2>
           </div>
           <div class="toolbar-right">
             <button class="btn btn-sm btn-ghost" id="btnAnalyzeNow">🔍 Analyze Frame</button>
