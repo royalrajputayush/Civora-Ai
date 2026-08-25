@@ -153,6 +153,24 @@ h1, h2, h3, h4 {
   text-transform: uppercase;
 }
 
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.nav-link {
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.nav-link:hover {
+  color: var(--text-primary);
+}
+
 .header-actions {
   display: flex;
   align-items: center;
@@ -656,6 +674,37 @@ h1, h2, h3, h4 {
   background: rgba(255, 255, 255, 0.06);
   border-radius: var(--radius-full);
   color: var(--text-tertiary);
+}
+
+/* Compact Privacy & Trust Footer Note */
+.privacy-trust-footer {
+  margin-top: var(--space-6);
+  text-align: left;
+}
+
+.privacy-footer-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  padding: var(--space-4) var(--space-5);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.privacy-footer-icon {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.privacy-footer-text {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.45;
+}
+
+.privacy-footer-text strong {
+  color: var(--text-primary);
 }
 
 .step-item-simple {
