@@ -128,20 +128,12 @@ class CivoraApp {
     document.getElementById('btnVisualPrevStep').addEventListener('click', () => this.prevVisualStep());
     document.getElementById('btnPopoutVisualGuide').addEventListener('click', () => this.openGuidancePopup());
 
-    // Back button — context-aware
+    // Back button — return to mode selection
     document.getElementById('btnBackToModes').addEventListener('click', () => {
-      if (this.currentView === 'services') {
-        this.showView('modes');
-      } else if (this.currentView === 'visual') {
-        this.showView('services');
-      } else if (this.currentView === 'live') {
+      if (this.currentView === 'live') {
         this.stopLiveCapture();
-        this.showView('services');
-      } else if (this.currentView === 'screenshot') {
-        this.showView('services');
-      } else {
-        this.showView('modes');
       }
+      this.showView('modes');
     });
 
     // Settings
@@ -351,29 +343,24 @@ class CivoraApp {
   }
 
   /**
-   * User picked a mode (live/screenshot). Show the smart search screen.
+   * User picked a mode (visual, live, or screenshot). Directly start guidance.
    */
   selectMode(mode) {
-    if (!this.visionEngine.isConfigured()) {
-      this.openSettings();
-      this.showToast('Please set your Gemini API key first.', 'info');
-      return;
-    }
-
     this.pendingMode = mode;
 
+    // Activate the main workflow (Aadhaar Services)
     const workflows = this.processKnowledge.getWorkflows();
     const mainWorkflow = workflows[0];
+    if (mainWorkflow) {
+      this.processKnowledge.setActiveWorkflow(mainWorkflow.id, 'update-address');
+    }
 
-    if (mainWorkflow && this.processKnowledge.hasSubWorkflows(mainWorkflow.id)) {
-      this._currentWorkflowId = mainWorkflow.id;
-      this.initSmartSearch(mainWorkflow.id);
-      this.showView('services');
+    if (mode === 'visual') {
+      this.startVisualGuideMode();
+    } else if (mode === 'live') {
+      this.startLiveMode();
     } else {
-      if (mainWorkflow) {
-        this.processKnowledge.setActiveWorkflow(mainWorkflow.id);
-      }
-      this.enterSelectedMode();
+      this.showView('screenshot');
     }
   }
 
