@@ -1306,9 +1306,55 @@ class CivoraApp {
 
   init3DVisuals() {
     this.initParticleStarfield();
+    this.initQuantumGyroParallax();
     this.initCursorGlow();
     this.init3DCardTilt();
     this.initMagneticButtons();
+  }
+
+  /**
+   * Ultra-Deluxe 3D Quantum Gyroscope Physics Parallax
+   */
+  initQuantumGyroParallax() {
+    const rig = document.getElementById('quantumGyroRig');
+    const scene = document.getElementById('hero3dScene');
+    if (!rig || !scene) return;
+
+    let targetRotX = 24;
+    let targetRotY = -20;
+    let currentRotX = targetRotX;
+    let currentRotY = targetRotY;
+
+    window.addEventListener('mousemove', (e) => {
+      const cx = window.innerWidth / 2;
+      const cy = window.innerHeight / 2;
+      const dx = (e.clientX - cx) / cx;
+      const dy = (e.clientY - cy) / cy;
+
+      targetRotX = 24 + dy * -35;
+      targetRotY = -20 + dx * 45;
+    });
+
+    scene.addEventListener('mouseenter', () => {
+      scene.style.transform = 'scale(1.12)';
+      scene.style.transition = 'transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)';
+    });
+
+    scene.addEventListener('mouseleave', () => {
+      scene.style.transform = 'scale(1)';
+      targetRotX = 24;
+      targetRotY = -20;
+    });
+
+    const updateRig = () => {
+      currentRotX += (targetRotX - currentRotX) * 0.08;
+      currentRotY += (targetRotY - currentRotY) * 0.08;
+
+      rig.style.transform = `rotateX(${currentRotX.toFixed(2)}deg) rotateY(${currentRotY.toFixed(2)}deg)`;
+      requestAnimationFrame(updateRig);
+    };
+
+    updateRig();
   }
 
   /**
