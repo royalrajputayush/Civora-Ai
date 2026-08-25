@@ -573,6 +573,14 @@
           <span class="step-screen-title">${analysis.screenTitle || ''}</span>
         </div>
 
+        <!-- Visual Target Spotlight Mockup -->
+        <div class="popup-visual-spotlight fade-in-up" style="margin: 8px 16px; padding: 12px; background: #0E122B; border: 1px solid rgba(121, 82, 252, 0.4); border-radius: 12px; text-align: center;">
+          <div style="font-size: 0.68rem; color: #70F7FF; text-transform: uppercase; font-weight: 800; margin-bottom: 6px; letter-spacing: 0.05em;">Visual Screen Target</div>
+          <div style="display: inline-block; padding: 8px 16px; background: linear-gradient(135deg, #1E3A8A, #3B82F6); color: white; border-radius: 8px; font-weight: 700; font-size: 0.85rem; border: 2px solid #00F0FF; box-shadow: 0 0 20px rgba(0, 240, 255, 0.5);">
+            🎯 ${action?.targetElement || 'Target Action'}
+          </div>
+        </div>
+
         <div class="instruction-block highlight fade-in-up">
           <div class="instruction-icon">${icon}</div>
           <div class="instruction-content">

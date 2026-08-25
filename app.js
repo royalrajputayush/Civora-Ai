@@ -11,6 +11,7 @@ import { ChangeDetector } from './modules/change-detector.js';
 import { VisionEngine } from './modules/vision-engine.js';
 import { ProcessKnowledge } from './modules/process-knowledge.js';
 import { GuidanceDisplay } from './modules/guidance-display.js';
+import { MockupRenderer } from './modules/mockup-renderer.js';
 
 class CivoraApp {
   constructor() {
@@ -22,12 +23,14 @@ class CivoraApp {
     this.visionEngine = new VisionEngine();
     this.processKnowledge = new ProcessKnowledge();
     this.guidanceDisplay = new GuidanceDisplay();
+    this.mockupRenderer = new MockupRenderer();
 
     // State
-    this.currentView = 'landing'; // landing | modes | services | live | screenshot
+    this.currentView = 'landing'; // landing | modes | services | live | screenshot | visual
     this.isLiveActive = false;
     this.liveAnalysisLoop = null;
-    this.pendingMode = null; // 'live' or 'screenshot' — set when user picks mode before service selection
+    this.pendingMode = 'visual'; // 'visual' | 'live' | 'screenshot'
+    this.visualStepIndex = 0;
 
     // Popup guidance window
     this.guidancePopup = null;
@@ -108,6 +111,10 @@ class CivoraApp {
     });
 
     // Mode selection — go through service picker first
+    document.getElementById('cardVisualMode').addEventListener('click', () => {
+      this.selectMode('visual');
+    });
+
     document.getElementById('cardLiveMode').addEventListener('click', () => {
       this.selectMode('live');
     });
@@ -116,10 +123,17 @@ class CivoraApp {
       this.selectMode('screenshot');
     });
 
+    // Visual mode controls
+    document.getElementById('btnVisualNextStep').addEventListener('click', () => this.nextVisualStep());
+    document.getElementById('btnVisualPrevStep').addEventListener('click', () => this.prevVisualStep());
+    document.getElementById('btnPopoutVisualGuide').addEventListener('click', () => this.openGuidancePopup());
+
     // Back button — context-aware
     document.getElementById('btnBackToModes').addEventListener('click', () => {
       if (this.currentView === 'services') {
         this.showView('modes');
+      } else if (this.currentView === 'visual') {
+        this.showView('services');
       } else if (this.currentView === 'live') {
         this.stopLiveCapture();
         this.showView('services');
@@ -175,6 +189,7 @@ class CivoraApp {
     document.getElementById('landingSection').style.display = 'none';
     document.getElementById('modeSelection').classList.remove('active');
     document.getElementById('serviceSelection').classList.remove('active');
+    document.getElementById('visualModeWorkspace').classList.remove('active');
     document.getElementById('liveModeWorkspace').classList.remove('active');
     document.getElementById('screenshotModeWorkspace').classList.remove('active');
 
@@ -197,6 +212,11 @@ class CivoraApp {
         document.getElementById('serviceSelection').classList.add('active');
         backBtn.style.display = '';
         privacyBadge.style.display = 'none';
+        break;
+      case 'visual':
+        document.getElementById('visualModeWorkspace').classList.add('active');
+        backBtn.style.display = '';
+        privacyBadge.style.display = '';
         break;
       case 'live':
         document.getElementById('liveModeWorkspace').classList.add('active');
@@ -648,16 +668,139 @@ class CivoraApp {
   }
 
   /**
-   * Enter the mode (live or screenshot) that was pending
+   * Enter the mode (visual, live or screenshot) that was pending
    */
   enterSelectedMode() {
-    const mode = this.pendingMode || 'screenshot';
+    const mode = this.pendingMode || 'visual';
     this.pendingMode = null;
 
-    if (mode === 'live') {
+    if (mode === 'visual') {
+      this.startVisualGuideMode();
+    } else if (mode === 'live') {
       this.startLiveMode();
     } else {
       this.showView('screenshot');
+    }
+  }
+
+  // ============================================
+  //  Visual Step-by-Step Guide Mode (100% Private)
+  // ============================================
+
+  startVisualGuideMode() {
+    this.visualStepIndex = 0;
+    this.showView('visual');
+    this.renderVisualStep(0);
+  }
+
+  renderVisualStep(index) {
+    const subWorkflow = this.processKnowledge.getActiveSubWorkflow();
+    const steps = subWorkflow?.steps || this.processKnowledge.getSteps() || [];
+
+    if (steps.length === 0) {
+      this.showToast('No steps available for this service.', 'info');
+      return;
+    }
+
+    // Clamp index
+    this.visualStepIndex = Math.max(0, Math.min(index, steps.length - 1));
+    const step = steps[this.visualStepIndex];
+    const total = steps.length;
+    const currentNum = this.visualStepIndex + 1;
+
+    // Render mockup diagram using MockupRenderer
+    const mockupContainer = document.getElementById('visualMockupContainer');
+    if (mockupContainer) {
+      mockupContainer.innerHTML = this.mockupRenderer.renderMockupHTML(step, subWorkflow?.id || 'update-address');
+    }
+
+    // Update Step Controls Panel
+    document.getElementById('visualPanelTitle').textContent = `${subWorkflow?.name || 'Aadhaar Service'} — Step ${currentNum} of ${total}`;
+    document.getElementById('visualStepBadge').textContent = `Step ${currentNum} of ${total}`;
+    document.getElementById('visualTimeBadge').textContent = subWorkflow?.estimatedTime || '~10 min';
+    document.getElementById('visualStepTitle').textContent = step.name || `Step ${currentNum}`;
+    document.getElementById('visualStepDesc').textContent = step.description || 'Follow the highlighted area on the screen mockup.';
+    document.getElementById('visualInstructionText').textContent = step.nextAction || step.instruction || `Click on "${step.targetElement}"`;
+    document.getElementById('visualTipText').textContent = step.tips || step.tip || 'You can do this directly on the official portal.';
+
+    // Action Icon
+    const actionIcons = { 'tap': '👆', 'type': '⌨️', 'select': '☑️', 'upload': '📎', 'scroll': '📜' };
+    document.getElementById('visualActionIcon').textContent = actionIcons[step.actionType] || (step.securityBoundary ? '🔒' : '👆');
+
+    // Progress
+    const percent = Math.round((currentNum / total) * 100);
+    document.getElementById('visualProgressPercent').textContent = `${percent}%`;
+    document.getElementById('visualProgressFill').style.width = `${percent}%`;
+
+    // Step List
+    const stepListEl = document.getElementById('visualStepList');
+    if (stepListEl) {
+      stepListEl.innerHTML = steps.map((s, idx) => {
+        const isDone = idx < this.visualStepIndex;
+        const isCurrent = idx === this.visualStepIndex;
+        const statusClass = isDone ? 'completed' : isCurrent ? 'current' : 'upcoming';
+        return `
+          <li class="step-item ${statusClass}" style="cursor:pointer;" onclick="window.civora.renderVisualStep(${idx})">
+            <span class="step-check">${isDone ? '✓' : idx + 1}</span>
+            <span>${s.name}</span>
+          </li>
+        `;
+      }).join('');
+    }
+
+    // Update Nav buttons
+    const prevBtn = document.getElementById('btnVisualPrevStep');
+    const nextBtn = document.getElementById('btnVisualNextStep');
+    prevBtn.disabled = this.visualStepIndex === 0;
+    prevBtn.style.opacity = this.visualStepIndex === 0 ? '0.5' : '1';
+
+    if (this.visualStepIndex === total - 1) {
+      nextBtn.innerHTML = `<span>✓</span><span>Complete!</span>`;
+    } else {
+      nextBtn.innerHTML = `<span>Next Step</span><span>→</span>`;
+    }
+
+    // Sync to floating popup window if open
+    if (this.guidancePopup && !this.guidancePopup.closed) {
+      this.sendToPopup({
+        type: 'civora:guidance',
+        payload: {
+          analysis: {
+            screenTitle: step.name,
+            stepNumber: currentNum,
+            totalStepsEstimate: total,
+            nextAction: {
+              instruction: step.nextAction || `Click on "${step.targetElement}"`,
+              actionType: step.actionType || 'tap',
+              targetElement: step.targetElement
+            },
+            tip: step.tips || step.tip,
+            isSecurityBoundary: !!step.securityBoundary
+          },
+          progress: {
+            percentage: percent,
+            current: currentNum,
+            total: total
+          }
+        }
+      });
+    }
+  }
+
+  nextVisualStep() {
+    const subWorkflow = this.processKnowledge.getActiveSubWorkflow();
+    const steps = subWorkflow?.steps || this.processKnowledge.getSteps() || [];
+
+    if (this.visualStepIndex < steps.length - 1) {
+      this.renderVisualStep(this.visualStepIndex + 1);
+    } else {
+      this.showToast('🎉 Congratulations! You have completed all steps.', 'success');
+    }
+  }
+
+  prevVisualStep() {
+    if (this.visualStepIndex > 0) {
+      this.renderVisualStep(this.visualStepIndex - 1);
     }
   }
 
