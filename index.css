@@ -900,46 +900,345 @@ body {
 
 .hero-features {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: var(--space-6);
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: var(--space-8);
   margin-top: var(--space-16);
-  max-width: 1050px;
+  max-width: 1180px;
   width: 100%;
   animation: fadeInUp 0.7s var(--transition-spring) 0.4s both;
 }
 
-.feature-card {
-  text-align: left;
-  padding: var(--space-8);
-  transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.2s ease, border-color 0.2s ease;
-  will-change: transform;
+/* 3D Holographic Feature Cards */
+.feature-3d-hologram {
+  padding: var(--space-6);
+  border-radius: var(--radius-2xl);
+  background: rgba(13, 16, 40, 0.85);
+  border: 1.5px solid var(--border-default);
+  box-shadow: var(--shadow-xl), 0 0 30px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  overflow: hidden;
+  position: relative;
+  transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.3s ease, box-shadow 0.3s ease;
+  transform-style: preserve-3d;
 }
 
-.feature-icon {
-  width: 54px;
-  height: 54px;
-  border-radius: var(--radius-lg);
+.feature-3d-hologram:hover {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-xl), 0 0 45px rgba(0, 240, 255, 0.25);
+}
+
+/* Hologram Viewport (Mini 3D Sandbox inside Card) */
+.hologram-viewport {
+  height: 160px;
+  border-radius: var(--radius-xl);
+  background: radial-gradient(circle at center, rgba(121, 82, 252, 0.15) 0%, rgba(6, 7, 19, 0.9) 80%);
+  border: 1px solid var(--border-subtle);
+  position: relative;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.75rem;
-  margin-bottom: var(--space-5);
-  background: linear-gradient(135deg, rgba(121, 82, 252, 0.15) 0%, rgba(0, 240, 255, 0.1) 100%);
-  border: 1px solid var(--border-primary);
-  box-shadow: 0 0 20px var(--primary-glow);
+  transform-style: preserve-3d;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
 }
 
-.feature-card h3 {
-  font-size: var(--text-lg);
+/* Hologram 1: Laser Screen Scanner */
+.holo-screen-mockup {
+  width: 85%;
+  height: 75%;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(0, 240, 255, 0.4);
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.15);
+}
+
+.holo-laser-beam {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #00F0FF;
+  box-shadow: 0 0 15px #00F0FF, 0 0 30px #00F0FF;
+  animation: laserScan 2.5s ease-in-out infinite alternate;
+}
+
+.holo-target-box {
+  position: absolute;
+  top: 35%;
+  left: 30%;
+  width: 40%;
+  height: 30%;
+  border: 1px dashed #00F0FF;
+  animation: targetPulse 2s infinite;
+}
+
+.holo-corner {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-color: #00F0FF;
+  border-style: solid;
+}
+
+.holo-corner.tl { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
+.holo-corner.tr { top: -1px; right: -1px; border-width: 2px 2px 0 0; }
+.holo-corner.bl { bottom: -1px; left: -1px; border-width: 0 0 2px 2px; }
+.holo-corner.br { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
+
+.holo-tag {
+  position: absolute;
+  top: -16px;
+  left: 0;
+  font-size: 0.62rem;
+  background: rgba(0, 240, 255, 0.3);
+  color: #00F0FF;
+  padding: 1px 4px;
+  border-radius: 3px;
   font-weight: 700;
+  white-space: nowrap;
+}
+
+.holo-hud-metric {
+  position: absolute;
+  bottom: 4px;
+  left: 6px;
+  font-size: 0.65rem;
+  font-family: var(--font-mono);
+  color: var(--success);
+}
+
+/* Hologram 2: Private Vault Scene */
+.holo-vault-scene {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vault-ring {
+  position: absolute;
+  border-radius: 50%;
+}
+
+.vault-ring.ring-1 {
+  width: 90px;
+  height: 90px;
+  border: 1.5px dashed rgba(0, 245, 155, 0.6);
+  animation: spinRingOuter 8s linear infinite;
+}
+
+.vault-ring.ring-2 {
+  width: 65px;
+  height: 65px;
+  border: 1.5px solid rgba(0, 245, 155, 0.4);
+  animation: spinRingInner 5s linear infinite reverse;
+}
+
+.vault-shield-icon {
+  font-size: 2.2rem;
+  z-index: 2;
+  filter: drop-shadow(0 0 15px rgba(0, 245, 155, 0.7));
+  animation: float 3s ease-in-out infinite;
+}
+
+.vault-badge {
+  position: absolute;
+  bottom: -18px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: var(--success);
+  background: rgba(0, 245, 155, 0.15);
+  border: 1px solid rgba(0, 245, 155, 0.4);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+}
+
+/* Hologram 3: Nav Sonar Scene */
+.holo-nav-scene {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.holo-sonar-circle {
+  position: absolute;
+  border: 1.5px solid var(--accent);
+  border-radius: 50%;
+  animation: sonarWave 2.5s infinite;
+}
+
+.holo-sonar-circle.pulse-2 {
+  animation-delay: 1.25s;
+}
+
+.holo-pointer-hand {
+  font-size: 2.2rem;
+  z-index: 2;
+  animation: tapMotion 1.5s infinite;
+}
+
+.holo-step-pill {
+  position: absolute;
+  bottom: -18px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: var(--secondary-neon);
+  background: rgba(255, 46, 147, 0.15);
+  border: 1px solid rgba(255, 46, 147, 0.4);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+}
+
+.feature-badge-neon {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  margin-bottom: var(--space-2);
+}
+
+.feature-badge-neon.emerald { color: var(--success); }
+.feature-badge-neon.pink { color: var(--secondary-neon); }
+
+.feature-info h3 {
+  font-size: var(--text-xl);
+  font-weight: 800;
   margin-bottom: var(--space-2);
   color: var(--text-primary);
 }
 
-.feature-card p {
+.feature-info p {
   font-size: var(--text-sm);
   color: var(--text-secondary);
-  line-height: 1.65;
+  line-height: 1.6;
+}
+
+/* ===== 3D HOW IT WORKS JOURNEY SECTION ===== */
+.how-it-works-section {
+  margin-top: var(--space-24);
+  padding: var(--space-16) 0 var(--space-12);
+  text-align: center;
+  position: relative;
+}
+
+.section-badge-3d {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0.35rem 1rem;
+  background: rgba(0, 240, 255, 0.1);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  font-weight: 800;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: var(--space-4);
+}
+
+.journey-3d-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-8);
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.journey-step-card {
+  padding: var(--space-8);
+  text-align: left;
+  border-radius: var(--radius-2xl);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.3s ease, box-shadow 0.3s ease;
+  transform-style: preserve-3d;
+}
+
+.journey-step-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  border-color: var(--primary);
+  box-shadow: 0 15px 40px rgba(121, 82, 252, 0.25);
+}
+
+.journey-step-number {
+  font-size: 3rem;
+  font-weight: 900;
+  font-family: var(--font-mono);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.02) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: var(--space-3);
+  line-height: 1;
+}
+
+.journey-icon-glow {
+  font-size: 2rem;
+  margin-bottom: var(--space-4);
+  filter: drop-shadow(0 0 15px var(--accent));
+}
+
+.journey-step-card h4 {
+  font-size: var(--text-lg);
+  font-weight: 800;
+  margin-bottom: var(--space-2);
+  color: var(--text-primary);
+}
+
+.journey-step-card p {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.journey-glow-line {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--primary), var(--accent), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.journey-step-card:hover .journey-glow-line {
+  opacity: 1;
+}
+
+/* Keyframe animations for holographic elements */
+@keyframes laserScan {
+  0% { top: 0%; opacity: 0.4; }
+  50% { opacity: 1; }
+  100% { top: 96%; opacity: 0.4; }
+}
+
+@keyframes targetPulse {
+  0%, 100% { transform: scale(1); border-color: #00F0FF; }
+  50% { transform: scale(1.05); border-color: #7952FC; }
+}
+
+@keyframes sonarWave {
+  0% { width: 10px; height: 10px; opacity: 1; transform: scale(0.2); }
+  100% { width: 90px; height: 90px; opacity: 0; transform: scale(1.1); }
+}
+
+@keyframes tapMotion {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(6px) scale(0.92); }
 }
 
 /* ---------- Mode Selection with 3D Tilt Cards ---------- */

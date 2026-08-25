@@ -1310,6 +1310,24 @@ class CivoraApp {
     this.initCursorGlow();
     this.init3DCardTilt();
     this.initMagneticButtons();
+    this.initScroll3DReveal();
+  }
+
+  /**
+   * Scroll-Driven Dynamic 3D Reveal Observer
+   */
+  initScroll3DReveal() {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view-3d');
+        }
+      });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.feature-3d-hologram, .journey-step-card, .mode-card').forEach((el) => {
+      observer.observe(el);
+    });
   }
 
   /**
@@ -1358,7 +1376,7 @@ class CivoraApp {
   }
 
   /**
-   * 3D Particle Starfield with Depth (Z-axis) & Constellation Mesh
+   * 3D Particle Starfield with Depth (Z-axis) & Scroll-Driven Hyper-Warp Velocity
    */
   initParticleStarfield() {
     const canvas = document.getElementById('particleCanvas');
@@ -1373,7 +1391,7 @@ class CivoraApp {
       height = canvas.height = window.innerHeight;
     });
 
-    const numParticles = Math.min(100, Math.floor((width * height) / 14000));
+    const numParticles = Math.min(120, Math.floor((width * height) / 12000));
     const particles = [];
 
     const mouse = {
@@ -1383,6 +1401,15 @@ class CivoraApp {
       targetY: height / 2,
     };
 
+    let scrollBoost = 0;
+    let lastScrollY = window.scrollY;
+
+    window.addEventListener('scroll', () => {
+      const deltaY = Math.abs(window.scrollY - lastScrollY);
+      scrollBoost = Math.min(12, scrollBoost + deltaY * 0.15);
+      lastScrollY = window.scrollY;
+    }, { passive: true });
+
     window.addEventListener('mousemove', (e) => {
       mouse.targetX = e.clientX;
       mouse.targetY = e.clientY;
@@ -1390,8 +1417,8 @@ class CivoraApp {
 
     for (let i = 0; i < numParticles; i++) {
       particles.push({
-        x: (Math.random() - 0.5) * width * 1.5,
-        y: (Math.random() - 0.5) * height * 1.5,
+        x: (Math.random() - 0.5) * width * 1.6,
+        y: (Math.random() - 0.5) * height * 1.6,
         z: Math.random() * 1000 + 1,
         baseRadius: Math.random() * 2 + 1,
         color: i % 3 === 0 ? 'rgba(0, 240, 255,' : i % 3 === 1 ? 'rgba(121, 82, 252,' : 'rgba(255, 46, 147,',
@@ -1400,6 +1427,9 @@ class CivoraApp {
     }
 
     const render = () => {
+      // Decay scroll boost smoothly
+      scrollBoost *= 0.92;
+
       // Lerp mouse for subtle parallax
       mouse.x += (mouse.targetX - mouse.x) * 0.05;
       mouse.y += (mouse.targetY - mouse.y) * 0.05;
@@ -1419,28 +1449,32 @@ class CivoraApp {
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
 
-        // Move along Z
-        p.z -= p.speedZ;
+        // Move along Z with dynamic scroll velocity boost
+        p.z -= p.speedZ + scrollBoost;
         if (p.z <= 0) {
           p.z = 1000;
-          p.x = (Math.random() - 0.5) * width * 1.5;
-          p.y = (Math.random() - 0.5) * height * 1.5;
+          p.x = (Math.random() - 0.5) * width * 1.6;
+          p.y = (Math.random() - 0.5) * height * 1.6;
         }
 
         // 3D to 2D projection
         const scale = fov / (fov + p.z);
         const projX = (p.x - offsetX) * scale + cx;
         const projY = (p.y - offsetY) * scale + cy;
-        const radius = Math.max(0.5, p.baseRadius * scale * 1.8);
+        const radius = Math.max(0.5, p.baseRadius * scale * (1.8 + scrollBoost * 0.1));
         const alpha = Math.min(1, Math.max(0.1, (1 - p.z / 1000) * 1.2));
 
         projected.push({ x: projX, y: projY, alpha, radius, color: p.color });
 
-        // Draw particle
+        // Draw particle (draws stretched streak if warping during scroll)
         ctx.beginPath();
-        ctx.arc(projX, projY, radius, 0, Math.PI * 2);
+        if (scrollBoost > 1) {
+          ctx.ellipse(projX, projY, radius, radius * (1 + scrollBoost * 0.6), 0, 0, Math.PI * 2);
+        } else {
+          ctx.arc(projX, projY, radius, 0, Math.PI * 2);
+        }
         ctx.fillStyle = `${p.color} ${alpha})`;
-        ctx.shadowBlur = radius > 2 ? 10 : 0;
+        ctx.shadowBlur = radius > 2 ? 12 : 0;
         ctx.shadowColor = p.color.includes('240') ? '#00f0ff' : '#7952fc';
         ctx.fill();
         ctx.shadowBlur = 0;
