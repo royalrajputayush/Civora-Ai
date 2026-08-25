@@ -42,40 +42,39 @@
   <!-- ===== MAIN CONTAINER ===== -->
   <main class="app-main">
 
-    <!-- ===== LANDING / HOME VIEW (Action-Oriented AI Interface) ===== -->
+    <!-- ===== LANDING / HOME VIEW (Conversational AI Assistant Interface) ===== -->
     <section class="landing-section" id="landingSection">
-      <div class="hero-container">
+      <div class="assistant-container">
         
-        <!-- Immediate 3-Second Headline -->
-        <div class="hero-badge">
-          <span class="badge-dot"></span>
-          <span>AI Resident Service Navigator</span>
+        <div class="assistant-header">
+          <div class="assistant-avatar">🎯</div>
+          <div class="assistant-greeting-badge">Civora AI Assistant</div>
         </div>
 
-        <h1 class="hero-title">
-          Stuck on a government portal?
+        <h1 class="assistant-main-prompt">
+          “What are you trying to do?”
         </h1>
 
-        <p class="hero-subtitle">
-          Civora shows you exactly where to click and what to fill next. Simple, private, and instant.
+        <p class="assistant-subtitle">
+          Tell Civora which government portal task you need help with. We'll guide you step-by-step so you never get stuck.
         </p>
 
-        <!-- Intelligent AI Action Bar -->
-        <div class="ai-prompt-box">
+        <!-- Intelligent Assistant Prompt Box -->
+        <div class="assistant-prompt-box">
           <div class="prompt-input-wrapper">
-            <span class="prompt-icon">✨</span>
+            <span class="prompt-icon">💬</span>
             <input type="text" id="aiServiceSearchInput" class="ai-search-input" 
-                   placeholder="What do you need help with? (e.g. Update address, download Aadhaar...)"
+                   placeholder="Type what you need (e.g. Update my address in Aadhaar, download PDF...)"
                    autocomplete="off">
             <button class="btn btn-primary" id="btnLaunchSearchGuide">
-              <span>Start Guide</span>
+              <span>Ask AI</span>
               <span>→</span>
             </button>
           </div>
 
-          <!-- Quick Service Chips -->
+          <!-- Quick Service Suggestion Chips -->
           <div class="prompt-quick-chips">
-            <span class="chips-label">Popular:</span>
+            <span class="chips-label">Or choose a task:</span>
             <button class="service-chip" data-workflow="update-address">📍 Update Address</button>
             <button class="service-chip" data-workflow="download-aadhaar">📥 Download e-Aadhaar</button>
             <button class="service-chip" data-workflow="update-mobile">📱 Link Mobile</button>
@@ -84,56 +83,61 @@
           </div>
         </div>
 
-        <!-- Primary Action Cards (Above The Fold) -->
-        <div class="mode-launch-grid">
-          <!-- Action 1: Visual Interactive Walkthrough -->
-          <div class="mode-card-v1 primary-mode" id="cardVisualMode">
-            <div class="mode-card-header">
-              <div class="mode-icon-v1">🗺️</div>
-              <span class="tag-badge recommended">⭐ 100% Private — No Screen Share</span>
-            </div>
-            <h3>Visual Step-by-Step Guide</h3>
-            <p>
-              Follow interactive screen mockups with highlighted click targets. You do the actions yourself on the official website.
-            </p>
-            <button class="btn btn-primary btn-block">
-              <span>Launch Visual Guide</span>
-              <span>→</span>
-            </button>
+        <!-- AI Guidance Method Selection (Conversational response card) -->
+        <div class="ai-assistant-response" id="aiAssistantResponse">
+          <div class="response-header">
+            <span class="response-ai-tag">✨ CIVORA AI GUIDANCE PLAN</span>
+            <span class="response-service-name" id="responseServiceName">Aadhaar Address Update</span>
           </div>
 
-          <!-- Action 2: Screenshot AI Diagnosis -->
-          <div class="mode-card-v1" id="cardScreenshotMode">
-            <div class="mode-card-header">
-              <div class="mode-icon-v1">📸</div>
-              <span class="tag-badge">⚡ Instant AI Analysis</span>
+          <p class="response-text" id="responseServiceDesc">
+            I can guide you through this process on the official portal in about 5 minutes. How would you like me to guide you?
+          </p>
+
+          <div class="guidance-options-grid">
+            <!-- Method 1: Interactive Visual Guide -->
+            <div class="guidance-method-card primary" id="btnChooseVisualMethod">
+              <div class="method-icon">🗺️</div>
+              <div class="method-info">
+                <div class="method-title-row">
+                  <h4>Interactive Visual Guide</h4>
+                  <span class="tag-badge recommended">⭐ 100% Private</span>
+                </div>
+                <p>Follow simulated portal screens with highlighted buttons. No screen sharing required.</p>
+                <div class="method-action-text">Start Visual Guide →</div>
+              </div>
             </div>
-            <h3>Screenshot AI Diagnosis</h3>
-            <p>
-              Drop or paste a screenshot of where you are stuck. Gemini AI scans the screen and highlights your next action.
-            </p>
-            <button class="btn btn-secondary btn-block">
-              <span>Upload Screenshot</span>
-              <span>→</span>
-            </button>
+
+            <!-- Method 2: Screenshot AI Diagnosis -->
+            <div class="guidance-method-card" id="btnChooseScreenshotMethod">
+              <div class="method-icon">📸</div>
+              <div class="method-info">
+                <div class="method-title-row">
+                  <h4>Screenshot AI Diagnosis</h4>
+                  <span class="tag-badge">⚡ Instant</span>
+                </div>
+                <p>Already on the portal? Drop or paste a screenshot and AI tells you where to click.</p>
+                <div class="method-action-text">Upload Screenshot →</div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <!-- How Civora Works (3-Second Mental Model) -->
+        <!-- 3-Second Mental Model -->
         <div class="mental-model-row">
           <div class="model-step">
             <span class="model-num">1</span>
-            <span>Choose service or drop screenshot</span>
+            <span>Tell Civora your task</span>
           </div>
           <span class="model-arrow">➔</span>
           <div class="model-step">
             <span class="model-num">2</span>
-            <span>Civora highlights the exact button</span>
+            <span>See exact button to click</span>
           </div>
           <span class="model-arrow">➔</span>
           <div class="model-step">
             <span class="model-num">3</span>
-            <span>Complete safely on official portal</span>
+            <span>Submit safely on official site</span>
           </div>
         </div>
 

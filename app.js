@@ -127,35 +127,48 @@ class CivoraApp {
       this.selectMode('screenshot');
     });
 
-    document.getElementById('cardVisualModeAlt')?.addEventListener('click', () => {
-      this.selectMode('visual');
-    });
-
-    document.getElementById('cardScreenshotModeAlt')?.addEventListener('click', () => {
-      this.selectMode('screenshot');
-    });
+    // Conversational AI Assistant Workflow Handler
+    const updateAssistantPlan = (workflowId, serviceLabel) => {
+      this.processKnowledge.setActiveSubWorkflow(workflowId);
+      
+      const responseCard = document.getElementById('aiAssistantResponse');
+      const nameEl = document.getElementById('responseServiceName');
+      const descEl = document.getElementById('responseServiceDesc');
+      
+      if (nameEl) nameEl.textContent = serviceLabel || workflowId.replace('-', ' ');
+      if (descEl) descEl.textContent = `I will guide you step-by-step through ${serviceLabel || 'this process'} on the official portal in about 5 minutes. How would you like me to guide you?`;
+      
+      if (responseCard) {
+        responseCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    };
 
     // AI Prompt / Search Bar Handler
     const launchFromSearch = () => {
       const searchInput = document.getElementById('aiServiceSearchInput');
       const query = (searchInput?.value || '').trim().toLowerCase();
       let matchedWf = 'update-address'; // default
+      let label = 'Aadhaar Address Update';
 
       if (query.includes('download') || query.includes('pdf') || query.includes('copy') || query.includes('get aadhaar')) {
         matchedWf = 'download-aadhaar';
+        label = 'Download e-Aadhaar PDF';
       } else if (query.includes('mobile') || query.includes('phone') || query.includes('number') || query.includes('sim')) {
         matchedWf = 'update-mobile';
+        label = 'Link / Update Mobile Number';
       } else if (query.includes('name') || query.includes('spelling') || query.includes('rename')) {
         matchedWf = 'update-name';
+        label = 'Correct Name Spelling';
       } else if (query.includes('status') || query.includes('track') || query.includes('check')) {
         matchedWf = 'check-status';
+        label = 'Check Request Status';
       } else if (query.includes('dob') || query.includes('birth') || query.includes('date')) {
         matchedWf = 'update-dob';
+        label = 'Update Date of Birth';
       }
 
-      this.processKnowledge.setActiveSubWorkflow(matchedWf);
-      this.startVisualGuideMode();
-      this.showToast(`Starting visual guide: ${matchedWf.replace('-', ' ')}`, 'info');
+      updateAssistantPlan(matchedWf, label);
+      this.showToast(`AI matched: ${label}`, 'info');
     };
 
     document.getElementById('btnLaunchSearchGuide')?.addEventListener('click', launchFromSearch);
@@ -168,11 +181,18 @@ class CivoraApp {
       chip.addEventListener('click', () => {
         const wf = chip.getAttribute('data-workflow');
         if (wf) {
-          this.processKnowledge.setActiveSubWorkflow(wf);
-          this.startVisualGuideMode();
-          this.showToast(`Starting ${chip.textContent.trim()} guide`, 'info');
+          updateAssistantPlan(wf, chip.textContent.trim());
         }
       });
+    });
+
+    // Method selection buttons inside AI response card
+    document.getElementById('btnChooseVisualMethod')?.addEventListener('click', () => {
+      this.startVisualGuideMode();
+    });
+
+    document.getElementById('btnChooseScreenshotMethod')?.addEventListener('click', () => {
+      this.showView('screenshot');
     });
 
     // Visual mode controls
